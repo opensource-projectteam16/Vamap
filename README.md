@@ -73,6 +73,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## Authors
 
 * **HYUNJAE LEE** - *Team leader* - [hyunjae-lee](https://github.com/hyunjae-lee)
+* **SUNGJAE MIN** - *Developer* - [alstjdwo1601](https://github.com/alstjdwo1601)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
