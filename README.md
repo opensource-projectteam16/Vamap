@@ -76,6 +76,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **SUNGJAE MIN** - *Developer* - [alstjdwo1601](https://github.com/alstjdwo1601)
 * **SANGMIN LEE** - *Developer* - [sangminBangbada](https://github.com/sangminBangbada)
 * **SEOKCHEON JU** - *Developer* - [smallfish06](https://github.com/smallfish06)
+* **YOOSEOK JEONG** - *Developer* - [jeong5575](https://github.com/jeong5575)
+
 
 
 
