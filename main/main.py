@@ -1,7 +1,9 @@
 import load
+import scoring
 import map3d
 import argparse
 import pandas as pd
+import marker_func
 
 # Hyunjae Lee , Sungjae Min is in charge
 
@@ -21,9 +23,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='This is simple User Data-Driven Map Visualization program.', prog='VAMAP')
     parser.add_argument('--version', action='version', version='%(prog)s 1.0')
-    parser.add_argument('files', metavar='Ref', type=argparse.FileType('r'), nargs='?',
-                        help='a reference excel file to be decided by you')
     # we need an argument for 'Coverage'
+
+    # [Plan]
+    # parser.add_argument('files', metavar='Ref', type=argparse.FileType('r'), nargs='?',
+    #                     help='a reference excel file to be decided by you')
 
     args = parser.parse_args()
 
@@ -36,10 +40,15 @@ if __name__ == "__main__":
     # Load custom marker icon
 
     # Load default markers (roads, buildings, subways)
+    Make_Default_Markers(Map_Object, roads, buildings, subways)
 
-    # Load default circlemarker based on user input (coverage)
+    # Load value markers and circlemarker based on user input (calculated by 'scroing')
+    Make_Value_Markers(MapObejct, user_data, coverage)
 
-    # Load value markers (calculated by 'scroing')
+    # Add choropleth
+    # Map_Object.choropleth(
 
+    # )
     # Save as html file
+
     Map_Object.save('MAP.html')

@@ -1,2 +1,2 @@
-python3.7
-folium
+python 3.7
+folium 0.8.3
