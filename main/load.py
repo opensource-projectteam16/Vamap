@@ -1,6 +1,21 @@
+import scoring
 import folium
 import json
+import os
+# Yooseok Jeong is in charge
 
+''' 
+<How to work>
+
+<Usage> 
+ Input example  :
+ Output example :
+
+'''
+
+
+'''example'''
+'''
 map_osm = folium.Map(location=[37.566345, 126.977893],zoom_start=17)
 
 folium.Marker([37.566345, 126.977893], popup= '서울특별시청' ).add_to(map_osm)
@@ -20,5 +35,9 @@ folium.GeoJson(jsonData2, name='json_data').add_to(map_osm)
 map_osm.save('c:/Users/82102/Documents/GitHub/Team16_Development/main/map.html')
 
 
+'''
 
 
+class Load:
+    def __init__(self, *args, **kwargs):
+        pass

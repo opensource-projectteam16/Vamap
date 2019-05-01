@@ -1,2 +1,2 @@
-pyqt5
 python3.7
+folium

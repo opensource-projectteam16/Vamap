@@ -5,9 +5,18 @@ from openpyxl.utils.cell import coordinate_from_string
 import csv
 from io import StringIO
 
+# Seokcheon Ju is in charge
+
+''' 
+<How to work>
+
+<Usage> 
+ Input example  :
+ Output example :
+
+'''
+
 class Coordinate:
-    def __init__(self):
-        pass
     def __init__(self,xcor,ycor):
         self.x=xcor
         self.y=ycor
