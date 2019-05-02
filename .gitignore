@@ -2,3 +2,4 @@
 .idea/
 .xlsx
 .pytest_cache/
+*.xml
