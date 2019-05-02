@@ -3,3 +3,6 @@
 .xlsx
 .pytest_cache/
 *.xml
+/*.xml 
+.cache/ 
+*.pyc
