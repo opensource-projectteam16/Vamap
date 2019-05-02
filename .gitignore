@@ -1,0 +1,4 @@
+.vscode/
+.idea/
+.xlsx
+.pytest_cache/
