@@ -1,0 +1,4 @@
+basedir=C:\Users\user\Documents\GitHub\Team16_Development\data
+userfile=C:\Users\user\Documents\GitHub\Team16_Development\dataprocessing/test.xml
+coverage=10
+view=36.534,157.33/35.633,157.33/36.534,154.35/35.633,154.35
