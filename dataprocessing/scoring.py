@@ -74,13 +74,13 @@ def valueScore(roads, buildings, subways, user_data) :
 
     for i in roads :
         np.append(valRoad,distanRoad(i, user_data))
-        sumR += distanRoad(i, user_data)
+        sumR += 1/distanRoad(i, user_data)
     for i in buildings:
         np.append(valBuild, distanBuild(i, user_data))
-        sumB += distanRoad(i, user_data)
+        sumB += 1/distanRoad(i, user_data)
     for i in subways:
         np.append(valSubway, distanSubway(i, user_data))
-        sumS += distanRoad(i, user_data)
+        sumS += 1/distanRoad(i, user_data)
 
     disValue = np.array([valRoad],[valBuild],[valSubway])
 
