@@ -15,7 +15,7 @@ import folium
 # Load default markers (roads, buildings, subways)
 
 
-def Make_Default_Markers(MapObejct, roads, buildings, subways):
+def Make_Default_Markers(MapObject, roads, buildings, subways):
 
     # Mark roads
     # skip roads
@@ -23,18 +23,18 @@ def Make_Default_Markers(MapObejct, roads, buildings, subways):
     # Mark buildings :: building[0] = coorx, building[1] = coory, building[2] = value of the building
     for building in buildings:
         folium.Marker([building[0], building[1]],
-                      tooltip=building[2]).add_to(MapObejct)
+                      tooltip=building[2]).add_to(MapObject)
 
     # Mark subways :: subway[0] = coorx, subway[1] = coory, subway[2] = the name of the subway station
     for subway in subways:
         folium.Marker([subway[0], subway[1]],
-                      tooltip=subway[2]).add_to(MapObejct)
+                      tooltip=subway[2]).add_to(MapObject)
 
 
 # Load value markers and circlemarker based on user input (calculated by 'scroing')
 
 
-def Make_Value_Markers(MapObejct, user_data, coverage):
+def Make_Value_Markers(MapObject, user_data, coverage):
     for data in user_data:
 
         loc = [data[0], data[1]]
@@ -47,7 +47,7 @@ def Make_Value_Markers(MapObejct, user_data, coverage):
             color = '#F7BC05'
 
         folium.Marker(loc,
-                      tooltip=data[3]).add_to(MapObejct)
+                      tooltip=data[3]).add_to(MapObject)
         folium.CircleMarker(
             location=loc,
             radius=coverage,
@@ -55,4 +55,4 @@ def Make_Value_Markers(MapObejct, user_data, coverage):
             color=color,
             fill=True,
             fill_color=color
-        ).add_to(MapObejct)
+        ).add_to(MapObject)
