@@ -1,5 +1,17 @@
 import folium
 
+
+# Hyunjae Lee is in charge
+
+''' 
+<How to work>
+
+<Usage> 
+ Input example  :
+ Output example :
+
+'''
+
 # Load default markers (roads, buildings, subways)
 
 
