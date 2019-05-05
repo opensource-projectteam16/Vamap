@@ -4,7 +4,8 @@ from openpyxl import load_workbook
 from openpyxl.utils.cell import coordinate_from_string
 import csv
 from io import StringIO
-
+import pandas as pd
+import numpy.lib.recfunctions as npfunc
 # Seokcheon Ju is in charge
 
 ''' 
@@ -22,16 +23,14 @@ class Coordinate:
         self.y=ycor
 
 class dataproc: 
-    def __init__(self,fileroute,columnx='x',columny='y',column_x='_x',column_y='_y',value='value',road=False,sheetname='',mode=0,):
+    def __init__(self,fileroute,columnname=['x','y','value'],sheetname='',mode=0,):
         """ 
-        fileroute={[list of datapath],a datapath}, columnx,column_x=name of x axis, columny,column_y=name of y axis, 
-        value= column which will be major comparator, sheet=sheet name(if different)
+        fileroute={[list of datapath],a datapath}, columnname=['x_columnname','y_columnname','x"_columnname','y"_columnname','value_columnname'], sheet=sheet name(if different)
         if it is road or double coordinate data road=true
         mode means recall from ready made data. 0==no csv file 1==have csv file
-        PLEASE ADD ROAD DATA SEPERATELY
         """
         if mode==0:
-            datamanager=excelmanager(fileroute,columnx,columny,column_x,column_y,value,sheetname,road)
+            datamanager=excelmanager(fileroute,columnname,sheetname)
             self.maindata=datamanager.getdata()
             self.datalabel=datamanager.getdatalabel()
            # print (self.maindata)
@@ -48,13 +47,16 @@ class dataproc:
             self.maindata=[]
             for difile in os.listdir(fileroute):
                # print(difile)
-                if difile.split(".")[-1]=='csv' and difile!='datalabel.csv':
-                    data = np.genfromtxt(difile, delimiter=",")
+                if difile.split(".")[-1]=='npy' and difile!='datalabel.csv':
+                    data = np.load(difile)
                     #print(data)
                     self.maindata.append(data)
                     csvFile.close()
         
-
+    def changecolumnname(self,columnname):
+        if len(columnname):
+            pass
+            
     def getcoordsortedata(self,coord1,coord2,coord3,coord4):
         """
         starts from right top coordinate, rotate into CW
@@ -97,79 +99,73 @@ class dataproc:
             writer.writerow(row)
         for datpage, datlabel in zip(self.maindata,self.datalabel):
             filename=datlabel+'.csv'
-            np.savetxt(filename, datpage, delimiter=',')
-
+            np.save(filename,datpage)           
     def getdatalabel(self):
         return self.datalabel
     def getdata(self):
         return self.maindata
 
 class excelmanager:
-    def __init__(self,datafile,columnx,columny,column_x,column_y,value,sheetname='',road=False): 
-        if road==False:
-            columnname=[columnx,columny,value]
-            self.resultlist=[]
-            self.datalabel=[]
+    def __init__(self,datafile,columnname,sheetname=''): 
+        self.resultlist=[]
+        self.datalabel=[]
+        if type(datafile)==list:
+            for afile in datafile:
+                load_exs = load_workbook(filename=afile, data_only=True)
+                print("loaded "+str(afile))
 
-            if type(datafile)==list:
-                for afile in datafile:
-                    load_exs = load_workbook(filename=afile, data_only=True)
-                    print("loaded "+str(afile))
-                    if sheetname!='':
-                        load_ws = load_exs[sheetname]
-                        self.datalabel.append(sheetname)
-                        self.resultlist=extractdata(load_exs[sheetname],columnname,road)
-
-                    for sheet in load_exs: #several sheets
-                        self.resultlist.append(self.extractdata(sheet,columnname,road))
-                        self.datalabel.append(sheet.title)
-
-            else:
-                load_exl = load_workbook(filename=datafile, data_only=True)
-                print("loaded "+str(datafile))
-
-                if sheetname!='':
-                    load_ws = load_exl[sheetname]
-                    self.datalabel.append(sheetname)
-                    self.resultlist=extractdata(load_ws[sheetname],columnname,road)
-
-                for sheet in load_exl: #several sheets
-                    self.resultlist.append(self.extractdata(sheet,columnname,road))
+                for sheet in load_exs: #several sheets
+                    self.resultlist.append(self.extractdata(sheet,columnname))
                     self.datalabel.append(sheet.title)
 
-        if road==True:
-            columnname=[columnx,columny,column_x,column_y,value]
-            self.resultlist=[]
-            self.datalabel=['road']
+        else:
             load_exl = load_workbook(filename=datafile, data_only=True)
             print("loaded "+str(datafile))
-            if sheetname!='':
-                load_ws = load_exl[sheetname]
-                self.resultlist=extractdata(load_ws[sheetname],columnname,road)
 
             for sheet in load_exl: #several sheets
-                self.resultlist.append(self.extractdata(sheet,columnname,road))
+                self.resultlist.append(self.extractdata(sheet,columnname))
+                self.datalabel.append(sheet.title)
         
     
-    def extractdata(self,load_sheet,columnname,road):
-        if road==False:
-            result=np.zeros((load_sheet.max_row-1,1))
+    def extractdata(self,load_sheet,columnname):
+        result=np.zeros((load_sheet.max_row-1,1))
+        namelist=[]
+        typelist=[]
+        listtype=0
+        for p,r in zip(load_sheet[2],load_sheet[1]):
             for name in columnname:
-                for r in load_sheet[1]:
-                    if r.value==name:
-                        dat=np.array([row[r.column-1].value for row in load_sheet.iter_rows(min_row=2)],order='K')
-                        dat=dat[:,np.newaxis]
+                if r.value==name:
+                    if isinstance(p.value,str):
+                        typelist.append(np.dtype('U30'))
+                    else:
+                        typelist.append(np.float64)
+            
+        for name in columnname:
+            add=False
+            for r in load_sheet[1]:
+                if r.value==name:
+                    add=True
+                    namelist.append(r.value)
+                    dtype=0
+                    dat=np.array([row[r.column-1].value for row in load_sheet.iter_rows(min_row=2)],order='K')
+                    dat[dat==None]=0
+                    dat=dat.astype(typelist[listtype])
+                    dat=dat[:,np.newaxis]
+                    print(dat.dtype)
+                    listtype=listtype+1
+            if add==True:
                 result=np.concatenate((result,dat),1)
-            result=np.delete(result,0,1)
-        else:
-            result=np.zeros((load_sheet.max_row-1,1))
-            for name in columnname:
-                for r in load_sheet[1]:
-                    if r.value==name:
-                        dat=np.array([row[r.column-1].value for row in load_sheet.iter_rows(min_row=2)],order='K')
-                        dat=dat[:,np.newaxis]
-                result=np.concatenate((result,dat),1)
-            result=np.delete(result,0,1)
+        
+        result=np.delete(result,0,1)
+
+        #print(namelist)
+        #print(typelist)
+        print(result)
+        dt={'names':namelist,'formats':typelist}#, 'formats':typelist
+        #result=npfunc.repack_fields(result).view(dt)
+        result.dtype=dt
+        print(result)
+    
         return result
 
     def getdata(self):
