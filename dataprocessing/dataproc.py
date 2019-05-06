@@ -33,7 +33,7 @@ class dataproc:
             datamanager=excelmanager(fileroute,columnname,sheetname)
             self.maindata=datamanager.getdata()
             self.datalabel=datamanager.getdatalabel()
-           # print (self.maindata)
+            print (self.maindata)
            # print (self.datalabel)
             self.savedata()
         if mode==1:
@@ -56,42 +56,6 @@ class dataproc:
     def changecolumnname(self,columnname):
         if len(columnname):
             pass
-            
-    def getcoordsortedata(self,coord1,coord2,coord3,coord4):
-        """
-        starts from right top coordinate, rotate into CW
-        """
-        resultlist=[]
-        for datpage in self.maindata:
-            idx = np.zeros((1,))
-            for row in range(0,np.size(datpage,0)):
-                tmp=np.where(np.logical_and(datpage[row][0] > coord2.y , datpage[row][0] <= coord1.y))[0]
-                if tmp.size>0:
-                    idx=np.concatenate((idx,[1]))
-                else:
-                    idx=np.concatenate((idx,[0]))
-                
-            idx=np.delete(idx,0,0)        
-            xindex=list()
-            for r in range(0,np.size(idx,0)):
-                if idx[r]!=0:
-                    xindex.append(r)
-            #extracted x < x> coordinate        
-            idx = np.zeros((1,))
-            for row in xindex:
-                tmp=np.where(np.logical_and(datpage[row][1] >coord3.x,datpage[row][1] <=coord2.x))[0]
-                if tmp.size>0:
-                    idx=np.concatenate((idx,[1]))
-                else:
-                    idx=np.concatenate((idx,[0]))
-            idx=np.delete(idx,0,0)            
-            xyindex=list()
-            for r in range(0,np.size(idx,0)):
-                if idx[r]!=0:
-                    xyindex.append(xindex[r])    
-            resultlist.append(datpage[np.array(np.asarray(xyindex))])      
-        
-        return resultlist
     
     def savedata(self):
         writer = csv.writer(open("datalabel.csv", 'w'))
@@ -128,7 +92,7 @@ class excelmanager:
         
     
     def extractdata(self,load_sheet,columnname):
-        result=np.zeros((load_sheet.max_row-1,1))
+        result=[]
         namelist=[]
         typelist=[]
         listtype=0
@@ -136,37 +100,21 @@ class excelmanager:
             for name in columnname:
                 if r.value==name:
                     if isinstance(p.value,str):
-                        typelist.append(np.dtype('U30'))
+                        typelist.append(object)
                     else:
                         typelist.append(np.float64)
-            
+        dat=[]
         for name in columnname:
-            add=False
             for r in load_sheet[1]:
                 if r.value==name:
-                    add=True
                     namelist.append(r.value)
                     dtype=0
-                    dat=np.array([row[r.column-1].value for row in load_sheet.iter_rows(min_row=2)],order='K')
-                    dat[dat==None]=0
-                    dat=dat.astype(typelist[listtype])
-                    dat=dat[:,np.newaxis]
-                    print(dat.dtype)
+                    tempdat=np.array([row[r.column-1].value for row in load_sheet.iter_rows(min_row=2)],order='K')[np.newaxis]
+                    tempdat=tempdat.astype([(name,typelist[listtype])])
+                    tempdat=tempdat.T
+                    dat.append(tempdat)
                     listtype=listtype+1
-            if add==True:
-                result=np.concatenate((result,dat),1)
-        
-        result=np.delete(result,0,1)
-
-        #print(namelist)
-        #print(typelist)
-        print(result)
-        dt={'names':namelist,'formats':typelist}#, 'formats':typelist
-        #result=npfunc.repack_fields(result).view(dt)
-        result.dtype=dt
-        print(result)
-    
-        return result
+        return dat
 
     def getdata(self):
         return self.resultlist
