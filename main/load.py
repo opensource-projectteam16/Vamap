@@ -11,27 +11,12 @@ import os.path
 
 <Usage>
  Input example  :
+        path = os.getcwd()
+        a = Load(path)
+        csvLists, jsonOutputs = a.loadJson()
  Output example :
-
-'''
-
-
-'''example'''
-'''
-rfile1 = open('c:/Users/82102/Documents/GitHub/Team16_Development/main/skorea-provinces-2018-geo.json',
-              'r', encoding='utf-8').read()
-
-rfile2= open('c:/Users/82102/Documents/GitHub/Team16_Development/main/seoul_municipalities_geo.json',
-             'r', encoding='utf-8').read()
-
-jsonData1 = json.loads(rfile1)
-
-jsonData2 = json.loads(rfile2)
-
-folium.GeoJson(jsonData1, name='json_data').add_to(map_osm)
-
-folium.GeoJson(jsonData2, name='json_data').add_to(map_osm)
-
+        print(csvLists)
+        print(JsonLists)
 '''
 
 
@@ -40,31 +25,52 @@ class Load:
         self.mypath = path
 
     def loadJson(self):
-        csvpath = self.mypath + '\default_data'
-        jsonpath = self.mypath + '\json'
-        print(csvpath)
-        print(jsonpath)
-        csvFormat = '*.csv'
-        jsonFormat = '*.json'
 
+        csvFormat = 'default_data/*.csv'
+        jsonFormat = 'json/*.json'
+
+        # Input
         csvLists = []
-        JsonLists = []
+        jsonLists = []
+        folder = []
 
-        for filename in glob.glob(os.path.join(csvpath, csvFormat)):
-            print(filename)
-            readFile = open(filename, 'r', encoding='utf-8').read()
-            print(readFile)
-            csvLists.append(json.loads(readFile))
-        return csvLists
+        # Output
+        csvOutputs = []
+        jsonOutputs = []
+
+        # Check root directory where 'data' folder is
+        for root in os.listdir(self.mypath):
+
+            fullPath = os.path.join(self.mypath, root)
+
+            if not os.path.isfile(fullPath):
+                folder.append(fullPath)
+
+        # Check data directory to get .csv and .json files
+        for eachDatafolder in folder:
+            if eachDatafolder[-4:] == 'data':
+                for filename in glob.glob(os.path.join(eachDatafolder, csvFormat)):
+                    csvLists.append(filename)
+                for filename in glob.glob(os.path.join(eachDatafolder, jsonFormat)):
+                    jsonLists.append(filename)
+
+        # Read .json files
+        for json in jsonLists:
+            readFile = open(json, 'r', encoding='utf-8').read()
+            jsonOutputs.append(readFile)
+
+        # Return path of .csv files and data of json files
+        return csvLists, jsonOutputs
+
+    def map_create_withJsons(self, jsonOutputs):
+        # Default map view // need to rearrange
+        Map_Object = folium.Map(
+            location=[37.566345, 126.977893], zoom_start=17)
+
+        for eachJson in jsonOutputs:
+            folium.GeoJson(eachJson, name='json_data').add_to(Map_Object)
+            return Map_Object
 
     def __str__(self):
+        # For testing
         pass
-
-'''
-<TESTING>
-path = os.getcwd()
-print(path)
-a = Load(path)
-files = a.loadJson()
-print(files)
-'''
