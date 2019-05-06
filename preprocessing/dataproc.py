@@ -4,8 +4,8 @@ from openpyxl import load_workbook
 from openpyxl.utils.cell import coordinate_from_string
 import csv
 from io import StringIO
-import pandas as pd
 import numpy.lib.recfunctions as npfunc
+from pathlib import Path
 # Seokcheon Ju is in charge
 
 ''' 
@@ -23,19 +23,35 @@ class Coordinate:
         self.y=ycor
 
 class dataproc: 
-    def __init__(self,fileroute,columnname=['x','y','value'],sheetname='',mode=0,):
+    def __init__(self,fileroute="\\default_data\\xlsx",columnname=['x','y','value'],sheetname='',mode=0,):
         """ 
         fileroute={[list of datapath],a datapath}, columnname=['x_columnname','y_columnname','x"_columnname','y"_columnname','value_columnname'], sheet=sheet name(if different)
         if it is road or double coordinate data road=true
         mode means recall from ready made data. 0==no csv file 1==have csv file
         """
         if mode==0:
-            datamanager=excelmanager(fileroute,columnname,sheetname)
-            self.maindata=datamanager.getdata()
-            self.datalabel=datamanager.getdatalabel()
-            print (self.maindata)
-           # print (self.datalabel)
-            self.savedata()
+            mypath = os.getcwd()
+            mypath=Path(mypath).parent
+            for parent in os.listdir(mypath):
+                if parent[-4:] == 'data':
+                    fullPath=os.path.join(mypath,parent)
+            fullPath=fullPath+fileroute
+            print(fullPath)
+            if os.path.isdir(fullPath):
+                print ("initialize")
+                for difile in os.listdir(fullPath):
+                    print(difile)
+                    datamanager=excelmanager(difile,columnname,sheetname)
+                    self.maindata=datamanager.getdata()
+                    self.datalabel=datamanager.getdatalabel()
+                    print (self.maindata)                    
+                    self.savedata()
+            else:    
+                datamanager=excelmanager(fileroute,columnname,sheetname)
+                self.maindata=datamanager.getdata()
+                self.datalabel=datamanager.getdatalabel()
+                print (self.maindata)
+                self.savedata()
         if mode==1:
             self.datalabel=[]
             with open("datalabel.csv", 'r') as csvFile:
