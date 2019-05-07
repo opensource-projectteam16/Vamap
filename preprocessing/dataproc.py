@@ -23,7 +23,7 @@ class Coordinate:
         self.y=ycor
 
 class dataproc: 
-    def __init__(self,fileroute="\\default_data\\xlsx",columnname=['x','y','value'],sheetname='',mode=0,):
+    def __init__(self,fileroute="\\default_data",columnname=['x','y','value'],sheetname='',mode=0,):
         """ 
         fileroute={[list of datapath],a datapath}, columnname=['x_columnname','y_columnname','x"_columnname','y"_columnname','value_columnname'], sheet=sheet name(if different)
         if it is road or double coordinate data road=true
@@ -41,7 +41,7 @@ class dataproc:
                 print ("initialize")
                 for difile in os.listdir(fullPath):
                     print(difile)
-                    datamanager=excelmanager(difile,columnname,sheetname)
+                    datamanager=excelmanager(fullPath+"\\"+difile,columnname,sheetname)
                     self.maindata=datamanager.getdata()
                     self.datalabel=datamanager.getdatalabel()
                     print (self.maindata)                    
