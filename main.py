@@ -1,7 +1,9 @@
 # 3rd parties
 import pandas as pd
+import sys
 
 # developed modules
+from main.parser import parser, checkArgument
 from main.load import Load
 from main.map3d import Map3d, TileLayer3d
 from main.marker_func import Make_Default_Markers, Make_Value_Markers
@@ -22,7 +24,6 @@ from dataprocessing.scoring import scoring
 
 
 def main(self):
-
     # path
     path = os.getcwd()
 
@@ -32,9 +33,10 @@ def main(self):
 
     when user hits 'python main.py setup.txt',
     arg = .... (read the content of setup.txt)
-    coverage , weights = parser(arg)
+    coverage , weights = parser(arg, path)
     
     '''
+    arg = checkArgument(sys.argv)
 
     # Load csv, json files
     load_instance = Load(path)
