@@ -48,8 +48,9 @@ def Make_Value_Markers(MapObject, user_data, coverage):
 
         folium.Marker(loc,
                       tooltip=data[3]).add_to(MapObject)
-        folium.CircleMarker(
-            location=loc,
+                      
+        folium.Circle(
+            loc,
             radius=coverage,
             # popup=''
             color=color,
