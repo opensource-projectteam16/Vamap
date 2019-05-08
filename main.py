@@ -1,13 +1,13 @@
 # 3rd parties
 import pandas as pd
 import sys
-
+import os
 # developed modules
 from main.parser import parser, checkArgument
 from main.load import Load
 from main.map3d import Map3d, TileLayer3d
 from main.marker_func import Make_Default_Markers, Make_Value_Markers
-from dataprocessing.scoring import scoring
+#from preprocessing.scoring import scoring
 
 # Hyunjae Lee is in charge
 
@@ -23,7 +23,7 @@ from dataprocessing.scoring import scoring
 # MAIN
 
 
-def main(self):
+def main():
     # path
     path = os.getcwd()
 
@@ -36,7 +36,13 @@ def main(self):
     coverage , weights = parser(arg, path)
     
     '''
+
     arg = checkArgument(sys.argv)
+    result = parser(path)
+
+    # print result
+    print("Coverage = ", result[0])
+    print("Weight = ", result[3])
 
     # Load csv, json files
     load_instance = Load(path)
@@ -60,11 +66,11 @@ def main(self):
     # Load custom marker icon
 
     # Load default markers (roads, buildings, subways)
-    Make_Default_Markers(Map_Object, roads, buildings, subways)
+    #Make_Default_Markers(Map_Object, roads, buildings, subways)
 
     # Load value markers and circlemarker based on user input
     # (calculated by 'scoring')
-    Make_Value_Markers(Map_Object, user_data, coverage)
+    #Make_Value_Markers(Map_Object, user_data, coverage)
 
     # Add choropleth
     # Map_Object.choropleth(

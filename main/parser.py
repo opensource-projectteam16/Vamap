@@ -1,14 +1,14 @@
 # Hyunjae Lee , Sungjae Min is in charge
 
 
-def parser(self, contents, path):
+def parser(path):
 
     # Read Setup.txt
     try:
         flag = True
 
         # TODO : Test open setup.txt file
-        f = open(path+'setup.txt', 'r', encoding='UTF-8')
+        f = open(path+'/setup.txt', 'r', encoding='UTF-8')
         lines = f.readlines()
 
         # Setup.txt의 각 line들을 저장
@@ -48,15 +48,13 @@ def parser(self, contents, path):
             "\n"), [t_load_weight, t_building_weight, t_subway_weight, t_userdata_weight]]
 
         if flag:
-            print(return_list)
             return return_list
 
         f.close()
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
 
-
-def checkArgument(self, argv):
+def checkArgument(argv):
     # If there is no argument
     if len(argv) is 1:
         print('You need "setup.txt"')
