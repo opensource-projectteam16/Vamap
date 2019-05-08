@@ -23,7 +23,7 @@ class Coordinate:
         self.y=ycor
 
 class dataproc: 
-    def __init__(self,fileroute="\\base_data",columnname=['x','y','value','address','x_','y_','name'],sheetname='',mode=0,):
+    def __init__(self,fileroute="\\base_data",columnname=['x','y','value','address','x_','y_','name','length'],sheetname='',mode=0,):
         """ 
         fileroute={[list of datapath],a datapath}, columnname=['x_columnname','y_columnname','x"_columnname','y"_columnname','value_columnname'], sheet=sheet name(if different)
         if it is road or double coordinate data road=true
