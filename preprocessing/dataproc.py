@@ -23,7 +23,7 @@ class Coordinate:
         self.y=ycor
 
 class dataproc: 
-    def __init__(self,fileroute="\\default_data",columnname=['x','y','value'],sheetname='',mode=0,):
+    def __init__(self,fileroute="\\base_data",columnname=['x','y','value','address','x_','y_','name'],sheetname='',mode=0,):
         """ 
         fileroute={[list of datapath],a datapath}, columnname=['x_columnname','y_columnname','x"_columnname','y"_columnname','value_columnname'], sheet=sheet name(if different)
         if it is road or double coordinate data road=true
@@ -39,18 +39,21 @@ class dataproc:
             print(fullPath)
             if os.path.isdir(fullPath):
                 print ("initialize")
+                filelist=[]
                 for difile in os.listdir(fullPath):
-                    print(difile)
-                    datamanager=excelmanager(fullPath+"\\"+difile,columnname,sheetname)
-                    self.maindata=datamanager.getdata()
-                    self.datalabel=datamanager.getdatalabel()
-                    print (self.maindata)                    
-                    self.savedata()
+                    #print(difile)
+                    if not os.path.isdir(fullPath+"\\"+difile):
+                        filelist.append(fullPath+"\\"+difile)
+                datamanager=excelmanager(filelist,columnname,sheetname)
+                self.maindata=datamanager.getdata()
+                self.datalabel=datamanager.getdatalabel()
+                #print (self.maindata)                    
+                self.savedata()
             else:    
                 datamanager=excelmanager(fileroute,columnname,sheetname)
                 self.maindata=datamanager.getdata()
                 self.datalabel=datamanager.getdatalabel()
-                print (self.maindata)
+                #print (self.maindata)
                 self.savedata()
         if mode==1:
             self.datalabel=[]
@@ -91,6 +94,7 @@ class excelmanager:
         self.datalabel=[]
         if type(datafile)==list:
             for afile in datafile:
+                print("loadstart"+afile)
                 load_exs = load_workbook(filename=afile, data_only=True)
                 print("loaded "+str(afile))
 
@@ -117,13 +121,15 @@ class excelmanager:
                 if r.value==name:
                     if isinstance(p.value,str):
                         typelist.append(object)
+                        namelist.append(name)
                     else:
                         typelist.append(np.float64)
+                        namelist.append(name)
+
         dat=[]
-        for name in columnname:
+        for name in namelist:
             for r in load_sheet[1]:
                 if r.value==name:
-                    namelist.append(r.value)
                     dtype=0
                     tempdat=np.array([row[r.column-1].value for row in load_sheet.iter_rows(min_row=2)],order='K')[np.newaxis]
                     tempdat=tempdat.astype([(name,typelist[listtype])])
