@@ -33,14 +33,6 @@ class Scoring:
         self.weight = weight
 
     # center road that is least distance point
-    def center_road(self, pre_roads):
-
-        roads = np.array()
-
-        roads[0] = (pre_roads[0][0] + pre_roads[1][0]) / 2
-        roads[1] = (pre_roads[0][1] + pre_roads[1][2]) / 2
-
-        return roads
 
     def convertDis(self, np_obj, userdata, coverage, count=0):
         # convert decimal degrees to radians
@@ -80,11 +72,28 @@ class Scoring:
 
         return sum
 
-    # a[0]:x
+    def cal_roads(self, user, user_data, coverage, weight):
+        # value = weight*(distance/coverage)
+        sum = 0;
+        i=0
+
+        pre = self.convertDis(user, user_data, coverage)
+
+        for i in pre:
+            if i == 0:
+                continue;
+            x = user[i][2]* weight * (i / coverage)
+            sum += x
+            i+=1
+
+        return sum
+
+
+   # a[0]:x
     # a[1]:y
     # a[2]:value
     # 접근 방식 : r[x][y].item()     b[x][y].item()       s[x][y].item()    a[x][y].item() //튜풀
-    # q=dataproc().
+    # q=dataproc()
     # q.getdata()[index]= data
     # q.getdatalabel()=['road','building','subway','user']
 
@@ -93,10 +102,46 @@ class Scoring:
 
     def valueScore(self):
 
-        nallOf = np.array()
-        nallOf = dataproc()
+        allOf = dataproc()
 
-        allOf = nallOf
+
+        allOf = dataproc('test.xlsx')
+        label=allOf.getdatalabel()
+        count = len(label)
+
+
+        roads = []
+        user_data = []
+        subways = []
+        buildings = []
+
+        for i in range(0, count):  # a[x][y] -> y
+            if label(i) == 'roads':
+                roads.append(allOf.getdata(i))
+            elif label(i) == 'buildings':
+                buildings.append(allOf.getdata(i))
+            elif label(i) == 'subways':
+                subways.append(allOf.getdata(i))
+            else:
+                user_data.append(allOf.getdata(i))
+
+
+        for user in user_data:
+            x = self.cal_roads(roads, user, self.coverage, self.weight[0])
+            y = self.cal_(buildings, user, self.coverage, self.weight[1])
+            z = self.cal_(subways, user, self.coverage, self.weight[2])
+            w = self.cal_(user_data, user, self.coverage, self.weight[3])
+
+            user[2] = x + z + y + w
+
+        return roads, buildings, subways, user_data
+
+    # 수정 코드 보관
+    '''
+    
+            allOf = dataproc()
+
+
 
         roads = []
         sub_bul = []
@@ -118,18 +163,6 @@ class Scoring:
                     else:
                         subways.append(j)
 
-        for user in user_data:
-            x = self.cal_(roads, user, self.coverage, self.weight[0])
-            y = self.cal_(buildings, user, self.coverage, self.weight[1])
-            z = self.cal_(subways, user, self.coverage, self.weight[2])
-            w = self.cal_(user_data, user, self.coverage, self.weight[3])
-
-            user[2] = x + z + y + w
-
-        return roads, buildings, subways, user_data
-
-    # 수정 코드 보관
-    '''
 
 
 

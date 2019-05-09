@@ -23,7 +23,7 @@ class Coordinate:
         self.y=ycor
 
 class dataproc: 
-    def __init__(self,fileroute="\\base_data",columnname=['x','y','value','address','x_','y_','name','length'],sheetname='',mode=0,):
+    def __init__(self,fileroute="/base_data",columnname=['x','y','value','address','x_','y_','name','length'],sheetname='',mode=0,):
         """ 
         fileroute={[list of datapath],a datapath}, columnname=['x_columnname','y_columnname','x"_columnname','y"_columnname','value_columnname'], sheet=sheet name(if different)
         if it is road or double coordinate data road=true
@@ -31,24 +31,27 @@ class dataproc:
         """
         if mode==0:
             mypath = os.getcwd()
-            mypath=Path(mypath).parent
-            fullPath=""
             for parent in os.listdir(mypath):
+                fullPath = os.path.join(mypath, parent)
+            #print("+"+fullPath)
+            for parent in os.listdir(fullPath):
+                #print(parent+"  ")
                 if parent[-4:] == 'data':
-                    fullPath=os.path.join(mypath,parent)
-            fullPath=fullPath+fileroute
+                    finalpath=os.path.join(fullPath,parent)
+            fullPath=finalpath+fileroute
+            print("fulli"+fullPath)
             if os.path.isdir(fullPath):
                 print ("initialize")
                 filelist=[]
                 for difile in os.listdir(fullPath):
                     #print(difile)
-                    if not os.path.isdir(fullPath+"\\"+difile):
-                        filelist.append(fullPath+"\\"+difile)
+                    if not os.path.isdir(fullPath+"/"+difile):
+                        filelist.append(fullPath+"/"+difile)
                 datamanager=excelmanager(filelist,columnname,sheetname)
                 self.maindata=datamanager.getdata()
                 self.datalabel=datamanager.getdatalabel()
                 #print (self.maindata)                    
-                self.savedata()
+                #self.savedata()
             else:    
                 datamanager=excelmanager(fileroute,columnname,sheetname)
                 self.maindata=datamanager.getdata()
