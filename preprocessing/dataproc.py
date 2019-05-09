@@ -32,11 +32,11 @@ class dataproc:
         if mode==0:
             mypath = os.getcwd()
             mypath=Path(mypath).parent
+            fullPath=""
             for parent in os.listdir(mypath):
                 if parent[-4:] == 'data':
                     fullPath=os.path.join(mypath,parent)
             fullPath=fullPath+fileroute
-            print(fullPath)
             if os.path.isdir(fullPath):
                 print ("initialize")
                 filelist=[]
