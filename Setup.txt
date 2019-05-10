@@ -4,8 +4,11 @@ Coverage = 100
 # User data file, sheet name, latitude, longitude
 User_data = mydata.csv, sheet_name, lat, lon
 
-# Number of value objects (this must be at least 1)
+# The number of value files (this must be at least 1)
 4
+
+# The number of road files
+2
 
 # Weights
 0.5, 0.25, 0.1, 0.15
@@ -13,8 +16,8 @@ User_data = mydata.csv, sheet_name, lat, lon
 # Road file, sheet name, latitude, longitude, startpoint, endpoint, (value, value-weight(-10 ~ 10 )) 
 # This can be empty
 myroad.csv, sheet1, x, y, start, end, width, 5
-myroad.csv, sheet2, a, b, st, fn
+myroad.csv, sheet2, a, b, st, fn, df ,5
 
 # Other value files, sheet name, latitude, longitude, (value, value-weight( -10 ~ 10 ))
 file1.csv, abc, a, b, va, 3
-file2.csv, abcd, x, y
+file2.csv, abcd, x, y, va2, 4

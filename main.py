@@ -41,8 +41,7 @@ def main():
     result = parser(path)
 
     # print result
-    print("Coverage = ", result[0])
-    print("Weight = ", result[3])
+    print(result)
 
     # Load csv, json files
     load_instance = Load(path)
