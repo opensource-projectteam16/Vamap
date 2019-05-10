@@ -1,7 +1,20 @@
-1. Coverage 값을 적어주세요(단위 m, 최소 50, 최대 1000) =124
-2. 엑셀파일에 위도정보가 있는 column 이름을 정확히 적어주세요 =위도정보
-3. 엑셀파일에 경도정보가 있는 column 이름을 정확히 적어주세요 =경도정보
-4. 도로와의 가치연산에 적용할 weight 값을 적어주세요(0과 1사이) =0.7
-5. 빌딩과의 가치연산에 적용할 weight 값을 적어주세요(0과 1사이) =0.3
-6. 지하철역과의 가치연산에 적용할 weight 값을 적어주세요(0과 1사이) =0.5
-7. 여러분이 입력하는 데이터와의 가치연산에 적용할 weight 값을 적어주세요(0과 1사이) =0.5
+# Coverage : this is absolute meter-wise distance centered on each user data, which will include all possible value objects. (50 ~ 1000m)
+Coverage = 100
+
+# User data file, sheet name, latitude, longitude
+User_data = mydata.csv, sheet_name, lat, lon
+
+# Number of value objects (this must be at least 1)
+4
+
+# Weights
+0.5, 0.25, 0.1, 0.15
+
+# Road file, sheet name, latitude, longitude, startpoint, endpoint, (value, value-weight(-10 ~ 10 )) 
+# This can be empty
+myroad.csv, sheet1, x, y, start, end, width, 5
+myroad.csv, sheet2, a, b, st, fn
+
+# Other value files, sheet name, latitude, longitude, (value, value-weight( -10 ~ 10 ))
+file1.csv, abc, a, b, va, 3
+file2.csv, abcd, x, y
