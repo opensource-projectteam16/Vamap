@@ -7,19 +7,17 @@ import math
 from math import radians, cos, sin, asin, sqrt
 from geopy.distance import vincenty
 
-'''
-넘어오는 데이터 가정
-array[[도로1],[도로2]],[빌딩],[지하철],[유저데이터]]
-'''
 
 ''' 
 <How to work>   
 <Usage> 
  Input example  : Numpy
- Output example : Numpy
+ Output example : list according below
  
-위도 1도 사이의 거리는 48,000 ÷ 360 = 133.33 km 
-'''
+    roads = [[x,y,start,end,가중치], ... ]
+    others = [[x,y,가중치], ... ]
+    userSet = [x, y, value]
+ '''
 
 
 class Scoring:
@@ -28,16 +26,6 @@ class Scoring:
         self.userSet = userSet
         self.roadsSet = roadsSet
         self.othersSet = othersSet
-
-
-
-        # a[0]:x
-        # a[1]:y
-        # a[2]:value
-        # 접근 방식 : r[x][y].item()     b[x][y].item()       s[x][y].item()    a[x][y].item() //튜풀
-        # q=dataproc()
-        # q.getdata()[index]= data
-        # q.getdatalabel()=['road','building','subway','user']
 
     '''
 
@@ -52,6 +40,52 @@ class Scoring:
 
     '''
 
+    def packingList(self, predata):
+        predata = predata[0]
+        predata = predata[0]
+
+
+
+
+        setindex = []
+        sx = []
+        sy = []
+        st = []
+        ed = []
+        va = []
+        for data, index in zip(predata, range(0, len(predata))):
+            ps = data.dtype
+            if ps.names[0] == 'x':
+                sx.append(predata[index])
+            elif ps.names[0] == 'y':
+                sy.append(predata[index])
+            elif ps.names[0] == 'start':
+                st.append(predata[index])
+            elif ps.names[0] == 'end':
+                ed.append(predata[index])
+            elif ps.names[0] == 'value':
+                va.append(predata[index])
+
+
+        sx = sx[0]
+        sy = sy[0]
+        st = st[0]
+        ed = ed[0]
+        va = va[0]
+        data = []
+
+        if st == list():
+            for i,j,k,l in zip(sx,sy,st,ed):
+                data.append([float(i[0][0]),float(j[0][0]),float(k[0][0]),float(l[0][0]),predata[0]])
+
+        else :
+            for i, j, k in zip(sx, sy, va):
+                data.append([float(i[0][0]), float(j[0][0]),predata[0]])
+
+        return data
+
+
+
     def callObj(self):
         allOf = dataproc()
 
@@ -59,12 +93,16 @@ class Scoring:
         count = len(label)
         Rcount = len(self.roadsSet)
         Ocount = len(self.ohtersSet)
+        Ucount = len(self.UserSet)
         r_value = []
         o_value = []
-        for i in self.roadsSet.value():
-            r_value.append(i)
-        for i in self.othersSet.value():
-            o_value.append(i)
+        u_value = []
+        for i,j in zip(self.roadsSet.keys(),self.roadsSet.values()):
+            r_value.append(i,j)
+        for i,j in zip(self.othersSet.keys(),self.othersSet.values()):
+            o_value.append(i,j)
+        for i, j in zip(self.userSet.keys(), self.userSet.values()):
+            u_value.append(i, j)
 
         userPack = []
         roadsPack = []
@@ -78,22 +116,36 @@ class Scoring:
             a = []
             othersPack.append(a)
 
+        for i in range(0, Ucount):
+            a = []
+            userPack.append(a)
+
         for i in range(0, count):
-            if label[i] == self.userSet[0]:
-                userPack.append(allOf.getdata()[i])
+            for u in range(0,Ucount):
+                if label[i] == self.userSet[u]:
+                    userPack.append([u_value[0],allOf.getdata()[i]])
             else:
                 for r in range(0, Rcount):
                     if label[i] == self.r_value[r]:
-                        roadsPack[r].append(allOf.getdata()[i])
+                        roadsPack[r].append([r_value[0],allOf.getdata()[i]])
 
                     else:
                         for o in range(0, Ocount):
                             if label[i] == self.o_value[o]:
-                                othersPack[o].append(allOf.getdata()[i])
+                                othersPack[o].append([o_value[0],allOf.getdata()[i]])
 
-        userPack = userPack[0]
-        roadsPack = roadsPack[0]
-        othersPack = othersPack[0]
+
+        userPack = [userPack]
+        userPack = self.packingList(userPack)
+        roadsPack = self.packingList(roadsPack)
+        othersPack = self.packingList(othersPack)
+
+        return userPack, roadsPack, othersPack
+
+
+
+
+#newCoverage -> inCoverage -> converDis -> cal
 
 
 
@@ -112,31 +164,52 @@ class Scoring:
     def inCoverage(self,data):
         upPoint, downPoint = self.newCoverage(data)
 
-
-
-        incoverU = []
+        incover = []
         for i in range(0,len(data)):
             if data[i][0] > upPoint[0] and data[i][0] < downPoint[0] :
-                incoverU.append(data[i])
+                incover.append(data[i])
             elif data[i][0] > downPoint[0]:
                 break;
 
-        for i in range(0,len(incoverU)):
+        for i in range(0,len(incover)):
             if data[i][1] > upPoint[1] or data[i][1] < downPoint[1] :
                 del data[i]
 
         return data
 
 
-    def convertDis(self, np_obj, userdata, coverage, count=0):
+#    roadsSet = {0.5 : [x,y,start,end], 가중치 :  [csv,sheet2,x,y,st,fn]}
+
+    def inCoverageR(self,data):
+        upPoint, downPoint = self.newCoverage(data)
+
+        incover = []
+        for i in range(0,len(data)):
+            if (data[i][0] > upPoint[0] and data[i][0] < downPoint[0])\
+                    or (data[i][2][0] > upPoint[0] and data[i][2][0]<downPoint[0])\
+                    or (data[i][3][0] > upPoint[0] and data[i][3][0]<downPoint[0]):
+                incover.append(data[i])
+
+        for i in range(0,len(incover)):
+            if data[i][1] > upPoint[1] or data[i][1] < downPoint[1] \
+                    or (data[i][2][1] > upPoint[1] and data[i][2][1] < downPoint[0]) \
+                    or (data[i][3][1] > upPoint[1] and data[i][3][1] < downPoint[0]):
+                del data[i]
+
+        return data
+
+
+
+
+    def convertDis(self, data, userdata):
         # convert decimal degrees to radians
 
         # user data간의 비교 판단
         dislist = []
 
         # 위도경도 -> m(거리)
-        for i in np_obj:
-            lon1, lat1, lon2, lat2 = map(radians, [i[0], i[1], userdata[0], userdata[1]])
+        for i in data:
+            lon1, lat1, lon2, lat2 = map(radians, [i[1], i[0], userdata[1], userdata[0]])
             # haversine formula
             dlon = lon2 - lon1
             dlat = lat2 - lat1
@@ -144,49 +217,57 @@ class Scoring:
             c = 2 * asin(sqrt(a))
             m = (6367 * c) * 1000
 
-            if coverage < m:
-                m = 0
-                dislist.append(m)
-            else:
-                dislist.append(m)
+            dislist.append(m)
 
         return dislist
 
 
 
-
-    def cal_(self, user, user_data, coverage, weight):
+## 가중치 매개변수 맞추기
+    def cal_(self, user, data, coverage, weight):
         # value = weight*(distance/coverage)
         sum = 0;
+        data = self.inCoverage(data)
 
-        pre = self.convertDis(user, user_data, coverage)
+        pre = self.convertDis(user, data)
 
         for i in pre:
-            if i == 0:
-                continue;
-            x = weight * (i / coverage)
-            sum += x
+                x = data[i][2] * (i / coverage)
+                sum += x
+
 
         return sum
 
 
 
-    def cal_roads(self, user, user_data, coverage, weight):
+    def cal_roads(self, user, data, coverage, weight):
         # value = weight*(distance/coverage)
+
         sum = 0;
         i=0
+        middle = []
+        start = []
+        end = []
+        for i in range(0,len(data)):
+            middle.append([data[i][0],data[i][1]])
+            start.append(data[i][2])
+            end.append(data[i][3])
 
-        pre1 = self.convertDis(user, user_data, coverage)
-        pre2 = self.convertDis(user, user_data, coverage)
-        pre3 = self.convertDis(user, user_data, coverage)
+        middleD = self.convertDis(user, middle, coverage)
+        startD = self.convertDis(user, start, coverage)
+        endD = self.convertDis(user, end, coverage)
 
 
+        distantList = []
+        pre=[]
+        for i in range(0,len(data)):
+            pre.append(middleD[i],startD[i],endD[i])
+            pre[i].sort()
+            distantList.append([pre[i][0],data[i][4]])
 
 
-        for i in pre1:
-            if i == 0:
-                continue;
-            x = user[i][2]* weight * (i / coverage)
+        for i in distantList:
+            x =  data[i][4]* (i / coverage)
             sum += x
             i+=1
 
@@ -202,31 +283,21 @@ class Scoring:
         count = len(label)
 
 
-        roads = []
-        user_data = []
-        subways = []
-        buildings = []
+        user_data, roads_data, others_data = self.callObj()
 
-        for i in range(0, count):  # a[x][y] -> y
-            if label(i) == 'roads':
-                roads.append(allOf.getdata(i))
-            elif label(i) == 'buildings':
-                buildings.append(allOf.getdata(i))
-            elif label(i) == 'subways':
-                subways.append(allOf.getdata(i))
-            else:
-                user_data.append(allOf.getdata(i))
-
+        resultUser = user_data
+        count = 0
 
         for user in user_data:
-            x = self.cal_roads(roads, user, self.coverage, self.weight[0])
-            y = self.cal_(buildings, user, self.coverage, self.weight[1])
-            z = self.cal_(subways, user, self.coverage, self.weight[2])
-            w = self.cal_(user_data, user, self.coverage, self.weight[3])
+            x = self.cal_roads(user, roads_data)
+            y = self.cal_(user, others_data, self.coverage)
+            z = self.cal_(user, user_data, self.coverage)
 
-            user[2] = x + z + y + w
 
-        return roads, buildings, subways, user_data
+            resultUser[count][2] = x + z + y
+            count +=1
+
+        return roads_data, others_data, resultUser
 
     # 수정 코드 보관
     '''
