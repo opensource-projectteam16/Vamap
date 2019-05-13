@@ -7,7 +7,7 @@ def parser(path):
     try:
         flag = True
         # TODO : Test open setup.txt file
-        f = open(path+'/Setup.txt', 'r', encoding='UTF-8')
+        f = open(path+'/setup.txt', 'r', encoding='UTF-8')
         lines = f.readlines()
 
         # Setup.txt의 각 line들을 저장
@@ -99,7 +99,8 @@ def parser(path):
             roads[weight_list[i]] = road_list[i]
         #print("road + weight 의 딕셔너리 : " , roads)
 
-        other_list = [[0 for x in range(6)] for y in range(value_num-roadfile_num)]
+        other_list = [[0 for x in range(6)]
+                      for y in range(value_num-roadfile_num)]
         for i in range(value_num-roadfile_num):
             for j in range(6):
                 other_list[i][j] = lines[i+21].split(',')[j].strip()
@@ -110,10 +111,9 @@ def parser(path):
             others[weight_list[i]] = other_list[i-2]
         #print("other value 와 weight 의 딕셔너리 : ", others)
 
-        if flag == True:
-            return_list = [fined_t_coverage, userdata_list, roads, others]
-            #print("최종결과는 : ", return_list)
-            return return_list
+        if flag:
+            return fined_t_coverage, userdata_list, roads, others
+
         f.close()
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
