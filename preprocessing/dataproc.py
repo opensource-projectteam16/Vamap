@@ -23,58 +23,88 @@ class Coordinate:
         self.y=ycor
 
 class dataproc: 
-    def __init__(self,fileroute="/base_data",columnname=['x','y','value','address','x_','y_','name','length'],sheetname='',mode=0,):
+    base_route="\\base_data"
+    user_route="\\user_data"
+    coverage=0
+    user_list=[]
+    base_data=[]
+    def __init__(self,datalist,mode):
         """ 
         fileroute={[list of datapath],a datapath}, columnname=['x_columnname','y_columnname','x"_columnname','y"_columnname','value_columnname'], sheet=sheet name(if different)
         if it is road or double coordinate data road=true
         mode means recall from ready made data. 0==no csv file 1==have csv file
         """
+
         if mode==0:
-            mypath = os.getcwd()
-            for parent in os.listdir(mypath):
-                fullPath = os.path.join(mypath, parent)
-            #print("+"+fullPath)
-            for parent in os.listdir(fullPath):
-                #print(parent+"  ")
-                if parent[-4:] == 'data':
-                    finalpath=os.path.join(fullPath,parent)
-            fullPath=finalpath+fileroute
-            print("fulli"+fullPath)
-            if os.path.isdir(fullPath):
-                print ("initialize")
-                filelist=[]
-                for difile in os.listdir(fullPath):
-                    #print(difile)
-                    if not os.path.isdir(fullPath+"/"+difile):
-                        filelist.append(fullPath+"/"+difile)
-                datamanager=excelmanager(filelist,columnname,sheetname)
-                self.maindata=datamanager.getdata()
-                self.datalabel=datamanager.getdatalabel()
-                #print (self.maindata)                    
-                #self.savedata()
-            else:    
-                datamanager=excelmanager(fileroute,columnname,sheetname)
-                self.maindata=datamanager.getdata()
-                self.datalabel=datamanager.getdatalabel()
-                #print (self.maindata)
-                self.savedata()
+            self.base_data=datalist
         if mode==1:
-            self.datalabel=[]
-            with open("datalabel.csv", 'r') as csvFile:
-                reader = csv.reader(csvFile)
-                for row in reader:
-                    if row != []:
-                        self.datalabel.append(''.join(row))
-                csvFile.close()
-            self.maindata=[]
-            for difile in os.listdir(fileroute):
-               # print(difile)
-                if difile.split(".")[-1]=='npy' and difile!='datalabel.csv':
-                    data = np.load(difile)
-                    #print(data)
-                    self.maindata.append(data)
-                    csvFile.close()
-        
+            self.base_data=datalist
+        if mode==2:
+            for data in datalist:
+                self.base_data.append(data)
+
+        mypath = os.path.abspath('..')
+        fullPath=mypath
+        finalpath=""
+        for parent in os.listdir(mypath):
+            #print(parent+"  ")
+            if parent[-4:] == 'data':
+                finalpath=os.path.join(fullPath,parent)
+        print(finalpath)
+        fullPath=finalpath+self.base_route
+        print("fulli"+fullPath)
+        if os.path.isdir(fullPath):
+            print ("initialize")
+            filelist=[]
+            for difile in os.listdir(fullPath):
+                for datafile in self.base_data:
+                    if mode==2 and datafile[0]==difile:
+                        filelist.append(fullPath+"\\"+difile)
+                    elif datafile==difile:
+                        filelist.append(fullPath+"\\"+difile)
+         
+            datamanager=excelmanager(filelist,self.base_data,mode)
+            self.maindata=datamanager.getdata()
+            self.datalabel=datamanager.getdatalabel()
+            self.changedtype(mode)
+
+    def changedtype(self,mode):
+        if mode==0:
+           for data,index in zip(self.maindata,range(0,)):
+               if index==0:
+                   data.dtype.names='x'
+               elif index==1:
+                   data.dtype.names='y'
+               elif index==2:
+                   data.dtype.names='value'
+               else:
+                   data.dtype.names='string'
+        if mode==1:
+            for data,index in zip(self.maindata,range(0,)):
+                if index==0:
+                    data.dtype.names='x'
+                elif index==1:
+                    data.dtype.names='y'
+                elif index==2:
+                    data.dtype.names='x_'
+                elif index==3:
+                    data.dtype.names='y_'
+                elif index==4:
+                    data.dtype.names='value'
+                else:
+                    data.dtype.names='string'
+        if mode==2:
+            for datalist in self.maindata:
+                for data,index in zip(datalist,range(0,)):
+                    if index==0:
+                        data.dtype.names='x'
+                    elif index==1:
+                        data.dtype.names='y'
+                    elif index==2:
+                        data.dtype.names='value'
+                    else:
+                        data.dtype.names='string'
+                
     def changecolumnname(self,columnname):
         if len(columnname):
             pass
@@ -92,27 +122,33 @@ class dataproc:
         return self.maindata
 
 class excelmanager:
-    def __init__(self,datafile,columnname,sheetname=''): 
+    def __init__(self,datafile,basedata,mode): 
         self.resultlist=[]
         self.datalabel=[]
-        if type(datafile)==list:
-            for afile in datafile:
-                print("loadstart"+afile)
+        print(datafile,basedata)
+        if mode==2:
+            for afile,datacolumn in zip(datafile,basedata):
+                datalist=datacolumn[2:]
+                print("loadstart"+afile,datalist)
                 load_exs = load_workbook(filename=afile, data_only=True)
                 print("loaded "+str(afile))
-
                 for sheet in load_exs: #several sheets
-                    self.resultlist.append(self.extractdata(sheet,columnname))
-                    self.datalabel.append(sheet.title)
+                    if sheet.title==datacolumn[1]:
+                        print(sheet,datalist)
+                        self.resultlist.append(self.extractdata(sheet,datalist))
+                        self.datalabel.append(sheet.title)
 
         else:
-            load_exl = load_workbook(filename=datafile, data_only=True)
-            print("loaded "+str(datafile))
-
-            for sheet in load_exl: #several sheets
-                self.resultlist.append(self.extractdata(sheet,columnname))
-                self.datalabel.append(sheet.title)
-        
+            for afile in datafile:
+                datalist=basedata[2:]
+                print("loadstart"+afile,datalist)
+                load_exs = load_workbook(filename=afile, data_only=True)
+                print("loaded "+str(afile))
+                for sheet in load_exs: #several sheets
+                    if sheet.title==basedata[1]:
+                        print(sheet,datalist)
+                        self.resultlist.append(self.extractdata(sheet,datalist))
+                        self.datalabel.append(sheet.title)            
     
     def extractdata(self,load_sheet,columnname):
         result=[]
