@@ -1,9 +1,13 @@
-from geopy.geocoders import Nominatim
-import pandas as pd
-from pandas import ExcelWriter
-from pandas import ExcelFile
+# import pandas as pd ## IMPORT ERROR
+
+
 import sys
 import os
+import numpy as np
+
+from geopy.geocoders import Nominatim
+from openpyxl import load_workbook
+
 
 # Hyunjae Lee is in charge
 
@@ -20,74 +24,112 @@ import os
 
 def main():
 
-    checkInputs(sys.args)
+    checkInputs(sys.argv)
 
     # Get user inputs
     your_roadfile = sys.argv[1]
     sheet_name = sys.argv[2]
     column_name = sys.argv[3]
-
-    geolocator = Nominatim(user_agent=" THIS IS ROAD MANAGER")
+    start_row = sys.argv[4]
 
     # Change the address to (latitude, longitude)
-    for each_contents in column_contents:
-        location = geolocator.geocode(each_contents)
+    your_roadfile, sheet_name = returnColumn(
+        your_roadfile, sheet_name, column_name, returntype=1)
 
-        if location is None:
-            print("No (latitude, longitude) is available at the address {}".format(
-                each_contents))
-            quit()
+    print(your_roadfile, sheet_name)
 
-        # TODO
-        print((location.latitude, location.longitude))
+
+def changeAddress(geolocator, address):
+
+    location = geolocator.geocode(address)
+
+    if location is None:
+        print("No (latitude, longitude) is available at the address {}".format(
+            location))
+        quit()
+
+    return (location.latitude, location.longitude)
 
 
 def checkInputs(checkInput):
-    if len(checkInput) not 4:
+    if len(checkInput) != 5:
         printError()
 
 
-def returnColumn(path_your_roadfile, sheet_name, column_name, returntype=0):
+def returnColumn(path_your_roadfile, sheet_name,
+                 column_name, startrow=1, returntype=0):
     '''
     returntype = 0 : return fp, sheet_name, column_name
-    returntype = 1 : return fp, sheet_name, column_contents
+    returntype = 1 : return fp, sheet_name
     '''
+    # If returntype is 1
+    if returntype == 1:
+        geolocator = Nominatim(user_agent=" THIS IS ROAD MANAGER")
 
     # <your_roadfile.csv> <sheet_name> <column_name>
     # 1st check : if your_roadfile is vaild form
-    for fp in filepaths:
-        # Split the extension from the path and normalise it to lowercase.
-        ext = os.path.splitext(fp)[-1].lower()
+    if os.path.isfile(path_your_roadfile):
+        print("Correct access")
+    else:
+        print("[ERROR] Failed to load Excel File : %s" % (path_your_roadfile))
 
-        # Now we can simply use == to check for equality, no need for wildcards.
-        if ext == ".csv":
-            print(fp, "is an csv!")
-        elif ext == ".xlsx":
-            print(fp, "is a xlsx file!")
-        else:
-            print(fp, "is an unknown file format.")
-            print(" We allow only .csv or .xlsx files ")
-            quit()
+    # for fp in path_your_roadfile:
+    #     # Split the extension from the path and normalise it to lowercase.
+    #     ext = os.path.splitext(fp)[-1].lower()
+
+    #     # Now we can simply use == to check for equality, no need for wildcards.
+    #     if ext == ".csv":
+    #         print(fp, "is an csv!")
+    #     elif ext == ".xlsx":
+    #         print(fp, "is a xlsx file!")
+    #     else:
+    #         print(fp, "is an unknown file format.")
+    #         print(" We allow only .csv or .xlsx files ")
+    #         quit()
 
     # 2nd check : if your_roadfile has the given 'sheet_name'
     # Execl handler
-    df = pd.read_excel(fp, sheetname=sheet_name)
-    if df is None:
+    wb = load_workbook(filename=path_your_roadfile)
+    if wb is None:
         printError()
 
-    # 3rd check : if df has the given 'column_name' in a sheet
+    # get the worksheet
+    worksheet = wb[sheet_name]
+    if worksheet is None:
+        printError()
+
+    # 3rd check : if the worksheet has the given 'column_name'
     # Check columns
-    if column_name not in df.columns:
+    list_with_values = []
+
+    for cell in worksheet[startrow]:
+        list_with_values.append(cell.value)
+    print('Your column list is {}'.format(list_with_values))
+    if column_name not in list_with_values:
         printError()
 
-    # Get the contents of the column
-    # TODO Use this variable if in case it needs
-    column_contents = df[column_name]
+    # 4th check : Get the contents of the given column    column_num = list_with_values.index(column_name)
+    column_num = list_with_values.index(column_name)
+    print('{} is located at {} column'.format(column_name, column_num+1))
+
+    column_contents = return_column_from_excel(path_your_roadfile, sheet_name,
+                                               column_num, startrow+1)
+
+    # 5th check : Write
+    for eachcell in column_contents:
+        # worksheet[eachcell] = changeAddress(geolocator, worksheet[eachcell])
+        print(worksheet[eachcell].value)
+        # print("after ", eachcell)
+
+    wb.close()
 
     if returntype == 0:
-        return fp, sheet_name, column_name
+        return path_your_roadfile, sheet_name, column_name
     elif returntype == 1:
-        return fp, sheet_name, column_contents
+        # save data as excel file
+        # wb.save(filename='converted_' + path_your_roadfile)
+        print(" Finish to save !")
+        return path_your_roadfile, sheet_name
     else:
         printError()
 
@@ -96,6 +138,15 @@ def printError():
     print("You have to follow input rule")
     print("python roadmanager.py <your_roadfile.csv> <sheet_name> <column_name>")
     quit()
+
+
+def return_column_from_excel(file_name, sheet_name, column_num, first_data_row):
+    wb = load_workbook(filename=file_name)
+    ws = wb[sheet_name]
+    min_col, min_row, max_col, max_row = (
+        column_num, first_data_row, column_num, ws.max_row)
+    wb.close()
+    return ws.iter_cols(min_col, min_row, max_col, max_row)
 
 
 if __name__ == "__main__":
