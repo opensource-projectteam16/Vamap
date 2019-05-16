@@ -1,59 +1,15 @@
 # Hyunjae Lee , Sungjae Min is in charge
-from roadmanager import returnColumn
+# from roadmanager import returnColumn
+import os
+
 
 def parser(path):
-
     # Read Setup.txt
     try:
         flag = True
         # TODO : Test open setup.txt file
-        f = open(path+'/setup.txt', 'r', encoding='UTF-8')
-        lines = f.readlines()
-
-        # Setup.txt의 각 line들을 저장
-        coverage = lines[1]
-        userdata = lines[4]
-        value_num = int(lines[7])
-        roadfile_num = int(lines[10])
-        weight = (lines[13])
-
-        # 10m 단위로만 input 으로 들어가게끔 coverage 값 수정
-        t_coverage = int(coverage.split('=')[1])
-        fined_t_coverage = t_coverage - t_coverage % 10
-        #print("Coverage : ", fined_t_coverage)
-
-        # 수정된 coverage 값이 조건에 부합하는지 확인, 아닐 경우 에러메세지 출력
-        if not 50 <= fined_t_coverage <= 1000:
-            flag = False
-            print("Coverage value is not valid. Coverage must be '50 ~ 1000(m)'")
-
-        # userdata 담는 list
-        t_userdata = userdata.split('=')[1]
-        userdata_list = [0 for x in range(4)]
-        for i in range(4):
-            userdata_list[i] = t_userdata.split(',')[i].strip()
-        #print("userdata 리스트 : " , userdata_list)
-
-        if value_num < 1:
-            flag = False
-            print("Number of value files must be at least 1.")
-
-        if roadfile_num > value_num:
-            flag = False
-            print("Number of road files can't be larger than value files.")
-
-        # value_num 갯수만큼만 list에 weight추가
-        weight_list = [0 for x in range(value_num)]
-        for i in range(value_num):
-            weight_list[i] = float(weight.split(',')[i].strip())
-
-        # weight 총합이 1이 아닐 경우 에러메세지 출력
-        if not sum(weight_list) == 1:
-            flag = False
-            print("Sum of Weight must be 1. Please check Weight values")
-
-
-        with open("setup.txt", "r") as ins:
+        #with open("C:/Users/user/Documents/GitHub/Team16_Development/Setup.txt", 'r') as ins:
+        with open(path + "/Setup.txt", 'r') as ins:
             array = []
             for line in ins:
                 li = line.strip()
@@ -63,67 +19,104 @@ def parser(path):
                     if len(line) < 1:
                         continue
                     array.append(line)
-            print(array)
-        
-        Roadcheck = False
-        if value_num == len(array[5:]):
-            road_list = [0 for x in range(roadfile_num)]
-            for i in range(roadfile_num):
-                road_list[i] = line[5+i].split(',')
-                print("1 ", road_list)
-                if len(road_list[i]) == 8 or len(road_list[i]) == 10:
-                    Roadcheck = True
-                    breakpoint()
-                #if Roadcheck:
-                    #각 엑셀파일 sheet에 해당 칼럼이 존재하는지 체크 - roadmanager
-                #   if 일치하는게없으면
-                #      칼럼이 존재하지않는 에러메세지
-                else:
-                    Roadcheck = False
-                    print("입력된 road가 잘못되었습니다.")
-        else:
-            print("-1")
+
+        coverage = int(array[0])
+        value_num = int(array[2])
+        road_num = int(array[3])
+
+        userdata_list = [0 for x in range(4)]
+        for i in range(4):
+            userdata_list[i] = array[1].split(',')[i].strip()
+
+        # value_num 갯수만큼만 list에 weight추가
+        weight_list = [0 for x in range(value_num)]
+        for i in range(value_num):
+            weight_list[i] = float(array[4].split(',')[i].strip())
 
 
-        # roadfile_num 갯수만큼만 읽음
-        road_list = [[0 for x in range(10)] for y in range(roadfile_num)]
-        for i in range(roadfile_num):
-            for j in range(len(lines[i+17].split(','))):
-                road_list[i][j] = lines[i+17].split(',')[j].strip()
-                # value-weight 값 에러 핸들링 (-10 ~ 10)
-                if not -10 <= road_list[i][10] <= 10 :
-                    flag = False
-                    print("Value's weight must be in -10 ~ 10.")
+        # 10m 단위로만 input 으로 들어가게끔 coverage 값 수정
+        fined_coverage = coverage - coverage % 10
 
-        #print("road 리스트 : " , road_list)
+        # 수정된 coverage 값이 조건에 부합하는지 확인, 아닐 경우 에러메세지 출력
+        if not 50 <= fined_coverage <= 1000:
+            flag = False
+            print("Coverage value is not valid. Coverage must be '50 ~ 1000(m)'")
 
-        # 딕셔너리 생성
+        if not len(userdata_list) == 4:
+            flag = False
+            print("Userdata must include filename, sheetname, latitude, longitude")
+
+        if value_num < 1:
+            flag = False
+            print("Number of value files must be at least 1.")
+
+        if road_num > value_num:
+            flag = False
+            print("Number of road files can't be larger than value files.")
+
+        if not sum(weight_list) == 1:
+            flag = False
+            print("Sum of Weight must be 1. Please check Weight values")
+
+        road_list = [0 for x in range(road_num)]
+        other_list = [0 for x in range(value_num - road_num)]
         roads = dict()
-        for i in range(roadfile_num):
-            roads[weight_list[i]] = road_list[i]
-        #print("road + weight 의 딕셔너리 : " , roads)
-
-        other_list = [[0 for x in range(6)]
-                      for y in range(value_num-roadfile_num)]
-        for i in range(value_num-roadfile_num):
-            for j in range(len(lines[i+21].split(','))):
-                other_list[i][j] = lines[i+21].split(',')[j].strip()
-                # value-weight 값 에러 핸들링 (-10 ~ 10)
-                if not -10 <= other_list[i][6] <= 10:
-                    flag = False
-                    print("Value's weight must be in -10 ~ 10.")
-
-        #print("other value 리스트 : ",other_list)
-
         others = dict()
-        for i in range(roadfile_num, value_num):
-            others[weight_list[i]] = other_list[i-2]
-        #print("other value 와 weight 의 딕셔너리 : ", others)
+
+        weight_list_string = [0 for x in range(value_num)]
+        for i in range(value_num):
+            weight_list_string[i] = str(i+1) +")"+ str(array[4].split(',')[i])
+
+        # road file 갯수를 0 이라고 한 경우
+        if road_num == 0:
+            for i in range(value_num):
+                other_list[i] = array[5 + i].split(',')
+                others[weight_list_string[i]] = other_list[i]
+                if not (len(other_list[i]) == 4 or len(other_list[i]) == 6):
+                    flag = False
+                    print("Please check otherfile form.")
+                if len(other_list[i]) == 6:
+                    if not -10 <= int(other_list[i][5]) <= 10:
+                        flag = False
+                        print("value-weight must be in -10 ~ 10")
+
+        # road file 이 존재하는 경우
+        else:
+            # road file 갯수 만큼 읽고 딕셔너리에 저장
+            for i in range(road_num):
+                road_list[i] = array[5 + i].split(',')
+                roads[weight_list_string[i]] = road_list[i]
+
+                # road list 길이가 8이나 10이 아닌경우 에러
+                if not (len(road_list[i]) == 8 or len(road_list[i]) == 10):
+                    flag = False
+                    print("Please check roadfile form.")
+
+                # road list 길이가 10 인데 마지막 weight값이 -10~10 이 아니면 에러
+                if len(road_list[i]) == 10:
+                    if not -10 <= int(road_list[i][9]) <= 10:
+                        flag = False
+                        print("value-weight must be in -10 ~ 10")
+
+            # value 갯수 - road 갯수 만큼 other 파일을 읽고 딕셔너리 저장
+            for i in range(value_num - road_num):
+                other_list[i] = array[-(value_num - road_num) + i].split(',')
+                others[weight_list_string[-(value_num - road_num) + i]] = other_list[i]
+
+                # other file 길이가 4, 6이 아니면 에러
+                if not (len(other_list[i]) == 4 or len(other_list[i]) == 6):
+                    flag = False
+                    print("Please check otherfile form.")
+
+                # other file 길이가 6인데 마지막 weight 값이 -10~ 10 이 아니면 에러
+                if len(other_list[i]) == 6:
+                    if not -10 <= int(other_list[i][5]) <= 10:
+                        flag = False
+                        print("value-weight must be in -10 ~ 10")
 
         if flag:
-            return fined_t_coverage, userdata_list, roads, others
+            return fined_coverage, userdata_list, roads, others
 
-        f.close()
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
 
@@ -141,3 +134,8 @@ def checkArgument(argv):
         quit()
     else:
         return [1]
+
+
+def strToint(str):
+    float_str = float(str.split(')')[1].strip())
+    return float_str

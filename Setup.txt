@@ -1,23 +1,25 @@
 # Coverage : this is absolute meter-wise distance centered on each user data, which will include all possible value objects. (50 ~ 1000m)
-Coverage = 100
+120
 
 # User data file, sheet name, latitude, longitude
-User_data = mydata.csv, sheet_name, lat, lon
+mydata.csv, sheet_name, lat, lon
 
 # The number of value files (this must be at least 1)
-4
+5
 
 # The number of road files
 2
 
-# Weights
-0.5, 0.25, 0.1, 0.15
+# Weights (number of value files = number of weights)
+0.3, 0.3, 0.1, 0.1, 0.2
 
 # Road file, sheet name, latitude, longitude, start latitude, start longitude, end latitude, end longitude (value, value-weight(-10 ~ 10 ))
 # This can be empty
-myroad.csv, sheet1, x, y, start_x, start_y, end_x, end_y, width, 5
-myroad.csv, sheet2, a, b, st_x, st_y, fn_x, fn_y, df ,5
+road1.csv, sheet1, lat, lon, start_x, start_y, end_x, end_y, val, -4
+road2.csv, sheet2, lat2, lon2, st_x, st_y, en_x, en_y
+
 
 # Other value files, sheet name, latitude, longitude, (value, value-weight( -10 ~ 10 ))
-file1.csv, abc, a, b, va, 3
-file2.csv, abcd, x, y, va2, 4
+other1.csv, abc, a, b, va, 3
+other2.csv, sdfa, x, y
+other3.csv, acasc, x_, y_, v, 10
