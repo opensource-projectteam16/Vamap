@@ -26,7 +26,7 @@ class Load:
 
     def loadJson(self):
 
-        csvFormat = 'user_data/*.csv'
+        csvFormat = 'province_data/*.csv'
         jsonFormat = 'json/*.json'
 
         # Input

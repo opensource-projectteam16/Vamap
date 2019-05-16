@@ -79,7 +79,7 @@ def main():
 
     # Save as html file
 
-    Map_Object.save('MAP.html')
+    # Map_Object.save('MAP.html')
 
 
 if __name__ == "__main__":
