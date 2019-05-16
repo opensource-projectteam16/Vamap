@@ -37,8 +37,8 @@ def main():
     
     '''
 
-    arg = checkArgument(sys.argv)
-    coverage, user_data, roads, others = parser(path)
+    # arg = checkArgument(sys.argv)
+    # coverage, user_data, roads, others = parser(path)
 
     # TODO Check error handling is working well.
     # print(coverage, user_data, roads, others)
@@ -48,6 +48,7 @@ def main():
     csvLists, jsonOutputs = load_instance.loadJson()
     Map_Object = load_instance.map_create_withJsons(jsonOutputs)
 
+    print(csvLists)
     # Data processing
     '''
     Sangmin Lee is in charge
@@ -78,7 +79,7 @@ def main():
 
     # Save as html file
 
-    # Map_Object.save('MAP.html')
+    Map_Object.save('MAP.html')
 
 
 if __name__ == "__main__":

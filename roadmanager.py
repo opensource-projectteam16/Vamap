@@ -104,9 +104,14 @@ def returnColumn(path_your_roadfile, sheet_name,
 
     for cell in worksheet[startrow]:
         list_with_values.append(cell.value)
+
     print('Your column list is {}'.format(list_with_values))
     if column_name not in list_with_values:
         printError()
+
+    if returntype == 0:
+        wb.close()
+        return path_your_roadfile, sheet_name, column_name
 
     # 4th check : Get the contents of the given column    column_num = list_with_values.index(column_name)
     column_num = list_with_values.index(column_name)
@@ -121,11 +126,7 @@ def returnColumn(path_your_roadfile, sheet_name,
         print(worksheet[eachcell].value)
         # print("after ", eachcell)
 
-    wb.close()
-
-    if returntype == 0:
-        return path_your_roadfile, sheet_name, column_name
-    elif returntype == 1:
+    if returntype == 1:
         # save data as excel file
         # wb.save(filename='converted_' + path_your_roadfile)
         print(" Finish to save !")

@@ -65,11 +65,12 @@ class Load:
     def map_create_withJsons(self, jsonOutputs):
         # Default map view // need to rearrange
         Map_Object = folium.Map(
-            location=[37.566345, 126.977893], zoom_start=17)
+            location=[37.566345, 126.977893], zoom_start=13)
 
         for eachJson in jsonOutputs:
             folium.GeoJson(eachJson, name='json_data').add_to(Map_Object)
-            return Map_Object
+
+        return Map_Object
 
     def __str__(self):
         # For testing
