@@ -86,10 +86,14 @@ class dataproc:
                 elif index==1:
                     data.dtype.names='y'
                 elif index==2:
-                    data.dtype.names='x_'
+                    data.dtype.names='x1'
                 elif index==3:
-                    data.dtype.names='y_'
+                    data.dtype.names='y1'
                 elif index==4:
+                    data.dtype.names='x2'
+                elif index==5:
+                    data.dtype.names='y2'
+                elif index==6:
                     data.dtype.names='value'
                 else:
                     data.dtype.names='string'

@@ -1,5 +1,5 @@
 # Hyunjae Lee , Sungjae Min is in charge
-
+from roadmanager import returnColumn
 
 def parser(path):
 
@@ -52,8 +52,8 @@ def parser(path):
             flag = False
             print("Sum of Weight must be 1. Please check Weight values")
 
-        '''
-        with open('C:/Users/user/Documents/GitHub/Team16_Development/Setup.txt', 'r') as ins:
+
+        with open("setup.txt", "r") as ins:
             array = []
             for line in ins:
                 li = line.strip()
@@ -63,7 +63,6 @@ def parser(path):
                     if len(line) < 1:
                         continue
                     array.append(line)
-
             print(array)
         
         Roadcheck = False
@@ -72,25 +71,30 @@ def parser(path):
             for i in range(roadfile_num):
                 road_list[i] = line[5+i].split(',')
                 print("1 ", road_list)
-                if len(road_list[i]) == 6 or len(road_list[i]) == 8:
+                if len(road_list[i]) == 8 or len(road_list[i]) == 10:
                     Roadcheck = True
                     breakpoint()
                 #if Roadcheck:
-                    #각 엑셀파일 sheet에 해당 칼럼이 존재하는지 체크
-                #   if # 일치하는게없으면
-                #      #칼럼이 존재하지않는 에러메세지
+                    #각 엑셀파일 sheet에 해당 칼럼이 존재하는지 체크 - roadmanager
+                #   if 일치하는게없으면
+                #      칼럼이 존재하지않는 에러메세지
                 else:
                     Roadcheck = False
                     print("입력된 road가 잘못되었습니다.")
         else:
             print("-1")
-        '''
+
 
         # roadfile_num 갯수만큼만 읽음
-        road_list = [[0 for x in range(8)] for y in range(roadfile_num)]
+        road_list = [[0 for x in range(10)] for y in range(roadfile_num)]
         for i in range(roadfile_num):
-            for j in range(8):
+            for j in range(len(lines[i+17].split(','))):
                 road_list[i][j] = lines[i+17].split(',')[j].strip()
+                # value-weight 값 에러 핸들링 (-10 ~ 10)
+                if not -10 <= road_list[i][10] <= 10 :
+                    flag = False
+                    print("Value's weight must be in -10 ~ 10.")
+
         #print("road 리스트 : " , road_list)
 
         # 딕셔너리 생성
@@ -102,8 +106,13 @@ def parser(path):
         other_list = [[0 for x in range(6)]
                       for y in range(value_num-roadfile_num)]
         for i in range(value_num-roadfile_num):
-            for j in range(6):
+            for j in range(len(lines[i+21].split(','))):
                 other_list[i][j] = lines[i+21].split(',')[j].strip()
+                # value-weight 값 에러 핸들링 (-10 ~ 10)
+                if not -10 <= other_list[i][6] <= 10:
+                    flag = False
+                    print("Value's weight must be in -10 ~ 10.")
+
         #print("other value 리스트 : ",other_list)
 
         others = dict()
@@ -122,13 +131,13 @@ def parser(path):
 def checkArgument(argv):
     # If there is no argument
     if len(argv) is 1:
-        print('You need "setup.txt"')
+        print('You need "Setup.txt"')
         quit()
     elif len(argv) > 2:
         print('There are more than 2 arguments')
         quit()
-    elif argv[1] != 'setup.txt':
-        print('You need "setup.txt"')
+    elif argv[1] != 'Setup.txt':
+        print('You need "Setup.txt"')
         quit()
     else:
         return [1]
