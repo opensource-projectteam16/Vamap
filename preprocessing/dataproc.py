@@ -6,6 +6,7 @@ import csv
 from io import StringIO
 import numpy.lib.recfunctions as npfunc
 from pathlib import Path
+import platform
 # Seokcheon Ju is in charge
 
 ''' 
@@ -22,9 +23,15 @@ class Coordinate:
         self.x=xcor
         self.y=ycor
 
-class dataproc: 
-    base_route="\\base_data"
-    user_route="\\user_data"
+class dataproc:
+    system=platform.system()
+    
+#    if system=='linux':
+    base_route="/base_data"
+    user_route="/user_data"
+#    elif system=='windows':
+#        base_route="\\base_data"
+#        user_route="\\user_data"
     coverage=0
     user_list=[]
     base_data=[]
@@ -43,7 +50,7 @@ class dataproc:
             for data in datalist:
                 self.base_data.append(data)
 
-        mypath = os.path.abspath('..')
+        mypath = os.path.abspath('/home/piu82/Git/OSS/Team16_Development/preprocessing')
         fullPath=mypath
         finalpath=""
         for parent in os.listdir(mypath):
@@ -51,7 +58,10 @@ class dataproc:
             if parent[-4:] == 'data':
                 finalpath=os.path.join(fullPath,parent)
         print(finalpath)
-        fullPath=finalpath+self.base_route
+        if mode==0:
+            fullPath='/home/piu82/Git/OSS/Team16_Development/data'+self.user_route
+        else:
+            fullPath='/home/piu82/Git/OSS/Team16_Development/data'+self.base_route
         print("fulli"+fullPath)
         if os.path.isdir(fullPath):
             print ("initialize")
@@ -59,9 +69,9 @@ class dataproc:
             for difile in os.listdir(fullPath):
                 for datafile in self.base_data:
                     if mode==2 and datafile[0]==difile:
-                        filelist.append(fullPath+"\\"+difile)
+                        filelist.append(fullPath+"/"+difile)
                     elif datafile==difile:
-                        filelist.append(fullPath+"\\"+difile)
+                        filelist.append(fullPath+"/"+difile)
          
             datamanager=excelmanager(filelist,self.base_data,mode)
             self.maindata=datamanager.getdata()
@@ -70,15 +80,17 @@ class dataproc:
 
     def changedtype(self,mode):
         if mode==0:
-           for data,index in zip(self.maindata,range(0,)):
-               if index==0:
-                   data.dtype.names='x'
-               elif index==1:
-                   data.dtype.names='y'
-               elif index==2:
-                   data.dtype.names='value'
-               else:
-                   data.dtype.names='string'
+            print('hi')
+            for index in range(0,len(self.maindata)+1):
+                print('hi1')
+                if index==0:
+                    self.maindata[0][index].dtype.names='x'
+                elif index==1:
+                    self.maindata[0][index].dtype.names='y'
+                elif index==2:
+                    self.maindata[0][index].dtype.names='value'
+                else:
+                    self.maindata[0][index].dtype.names='string'
         if mode==1:
             for data,index in zip(self.maindata,range(0,)):
                 if index==0:
@@ -150,7 +162,7 @@ class excelmanager:
                 print("loaded "+str(afile))
                 for sheet in load_exs: #several sheets
                     if sheet.title==basedata[1]:
-                        print(sheet,datalist)
+                        print('163',sheet.title,datalist)
                         self.resultlist.append(self.extractdata(sheet,datalist))
                         self.datalabel.append(sheet.title)            
     
@@ -183,5 +195,6 @@ class excelmanager:
 
     def getdata(self):
         return self.resultlist
+
     def getdatalabel(self):
         return self.datalabel
