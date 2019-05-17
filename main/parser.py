@@ -1,15 +1,19 @@
+#-*- coding: utf-8 -*-
 # Hyunjae Lee , Sungjae Min is in charge
-# from roadmanager import returnColumn
+from roadmanager import returnColumn
 import os
+import platform
+
 
 
 def parser(path):
     # Read Setup.txt
+    global file_path, user_path
     try:
         flag = True
         # TODO : Test open setup.txt file
         #with open("C:/Users/user/Documents/GitHub/Team16_Development/Setup.txt", 'r') as ins:
-        with open(path + "/Setup.txt", 'r') as ins:
+        with open(path + "/Setup.txt", 'r', encoding='utf-8') as ins:
             array = []
             for line in ins:
                 li = line.strip()
@@ -28,10 +32,26 @@ def parser(path):
         for i in range(4):
             userdata_list[i] = array[1].split(',')[i].strip()
 
+        if not len(userdata_list[2:]) == 2:
+            flag = False
+            print("Userdata must include filename, sheetname, latitude, longitude")
+
         # value_num 갯수만큼만 list에 weight추가
         weight_list = [0 for x in range(value_num)]
         for i in range(value_num):
             weight_list[i] = float(array[4].split(',')[i].strip())
+
+        system = platform.system()
+        if system == 'Linux':
+            user_path = "/data/user_data/"
+            file_path = "/data/base_data/"
+        elif system == 'Windows':
+            user_path = "\\data\\user_data\\"
+            file_path = "\\data\\base_data\\"
+
+        managed_userdata_list = [0 for x in range(len(userdata_list[2:]))]
+        for i in range(len(userdata_list[2:])):
+            managed_userdata_list[i] = returnColumn(path + user_path + userdata_list[0], userdata_list[1], userdata_list[2+i])
 
 
         # 10m 단위로만 input 으로 들어가게끔 coverage 값 수정
@@ -42,9 +62,7 @@ def parser(path):
             flag = False
             print("Coverage value is not valid. Coverage must be '50 ~ 1000(m)'")
 
-        if not len(userdata_list) == 4:
-            flag = False
-            print("Userdata must include filename, sheetname, latitude, longitude")
+
 
         if value_num < 1:
             flag = False
