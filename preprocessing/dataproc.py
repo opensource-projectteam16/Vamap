@@ -6,6 +6,7 @@ import csv
 from io import StringIO
 import numpy.lib.recfunctions as npfunc
 from pathlib import Path
+import platform
 # Seokcheon Ju is in charge
 
 ''' 
@@ -23,8 +24,14 @@ class Coordinate:
         self.y=ycor
 
 class dataproc: 
-    base_route="\\base_data"
-    user_route="\\user_data"
+    system=platform.system()
+    
+    if system=='linux':
+        base_route="/base_data"
+        user_route="/user_data"       
+    elif system=='windows':
+        base_route="\\base_data"
+        user_route="\\user_data"
     coverage=0
     user_list=[]
     base_data=[]
@@ -51,7 +58,10 @@ class dataproc:
             if parent[-4:] == 'data':
                 finalpath=os.path.join(fullPath,parent)
         print(finalpath)
-        fullPath=finalpath+self.base_route
+        if mode==0:
+            fullPath=finalpath+self.user_route
+        else:
+            fullPath=finalpath+self.base_route
         print("fulli"+fullPath)
         if os.path.isdir(fullPath):
             print ("initialize")
