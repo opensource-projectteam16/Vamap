@@ -24,14 +24,9 @@ class Coordinate:
         self.y=ycor
 
 class dataproc:
-    system=platform.system()
-    
-#    if system=='linux':
-    base_route="/base_data"
-    user_route="/user_data"
-#    elif system=='windows':
-#        base_route="\\base_data"
-#        user_route="\\user_data"
+    base_route=""
+    user_route=""
+    tab=""
     coverage=0
     user_list=[]
     base_data=[]
@@ -41,7 +36,17 @@ class dataproc:
         if it is road or double coordinate data road=true
         mode means recall from ready made data. 0==no csv file 1==have csv file
         """
+        system=platform.system()
 
+        if system=='Linux':
+            self.base_route="/base_data"
+            self.user_route="/user_data"
+            self.tab="/"
+        elif system=='Windows':
+            self.base_route="\\base_data"
+            self.user_route="\\user_data"
+            self.tab="\\"
+            
         if mode==0:
             self.base_data=datalist
         if mode==1:
@@ -50,18 +55,17 @@ class dataproc:
             for data in datalist:
                 self.base_data.append(data)
 
-        mypath = os.path.abspath('/home/piu82/Git/OSS/Team16_Development/preprocessing')
-        fullPath=mypath
+        mypath = os.path.realpath(__file__)
+        fullPath=os.path.dirname(os.path.dirname(mypath))
         finalpath=""
-        for parent in os.listdir(mypath):
+        for parent in os.listdir(fullPath):
             #print(parent+"  ")
             if parent[-4:] == 'data':
                 finalpath=os.path.join(fullPath,parent)
-        print(finalpath)
         if mode==0:
-            fullPath='/home/piu82/Git/OSS/Team16_Development/data'+self.user_route
+            fullPath=finalpath+""+self.user_route
         else:
-            fullPath='/home/piu82/Git/OSS/Team16_Development/data'+self.base_route
+            fullPath=finalpath+""+self.base_route
         print("fulli"+fullPath)
         if os.path.isdir(fullPath):
             print ("initialize")
@@ -69,9 +73,9 @@ class dataproc:
             for difile in os.listdir(fullPath):
                 for datafile in self.base_data:
                     if mode==2 and datafile[0]==difile:
-                        filelist.append(fullPath+"/"+difile)
+                        filelist.append(fullPath+self.tab+difile)
                     elif datafile==difile:
-                        filelist.append(fullPath+"/"+difile)
+                        filelist.append(fullPath+self.tab+difile)
          
             datamanager=excelmanager(filelist,self.base_data,mode)
             self.maindata=datamanager.getdata()
@@ -92,34 +96,34 @@ class dataproc:
                 else:
                     self.maindata[0][index].dtype.names='string'
         if mode==1:
-            for data,index in zip(self.maindata,range(0,)):
+            for index in range(0,len(self.maindata)+1):
                 if index==0:
-                    data.dtype.names='x'
+                    self.maindata[0][index].dtype.names='x'
                 elif index==1:
-                    data.dtype.names='y'
+                    self.maindata[0][index].dtype.names='y'
                 elif index==2:
-                    data.dtype.names='x1'
+                    self.maindata[0][index].dtype.names='x1'
                 elif index==3:
-                    data.dtype.names='y1'
+                    self.maindata[0][index].dtype.names='y1'
                 elif index==4:
-                    data.dtype.names='x2'
+                    self.maindata[0][index].dtype.names='x2'
                 elif index==5:
-                    data.dtype.names='y2'
+                    self.maindata[0][index].dtype.names='y2'
                 elif index==6:
-                    data.dtype.names='value'
+                    self.maindata[0][index].dtype.names='value'
                 else:
-                    data.dtype.names='string'
+                    self.maindata[0][index].dtype.names='string'
         if mode==2:
             for datalist in self.maindata:
-                for data,index in zip(datalist,range(0,)):
+                for index in zip(datalist,range(0,len(datalist)+1)):
                     if index==0:
-                        data.dtype.names='x'
+                        datalist[0][index].dtype.names='x'
                     elif index==1:
-                        data.dtype.names='y'
+                        datalist[0][index].dtype.names='y'
                     elif index==2:
-                        data.dtype.names='value'
+                        datalist[0][index].dtype.names='value'
                     else:
-                        data.dtype.names='string'
+                        datalist[0][index].dtype.names='string'
                 
     def changecolumnname(self,columnname):
         if len(columnname):
