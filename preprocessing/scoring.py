@@ -109,7 +109,7 @@ class Scoring:
 #        Ocount = len(self.othersSet)
 #        Ucount = len(self.userSet)
 
-        userPack = [self.userSet]
+        userPack = self.userSet
         roadsPack = [self.roadsSet]
         othersPack = [self.othersSet]
 
@@ -127,7 +127,6 @@ class Scoring:
             userPack.append(a)
         '''
 
-        userPack = [userPack]
         allR = dataproc(roadsPack, mode = 1)
         allO = dataproc(othersPack, mode = 2)
         allU = dataproc(userPack, mode = 0)
@@ -136,14 +135,14 @@ class Scoring:
         labelO = allO.getdatalabel()
         labelU = allU.getdatalabel()
 
-        print('139',labelU)
+        print('102',allU.getdata())
 
         for i in range(0, len(labelR)):
             roadsPack[i].append(allR.getdata())
         for i in range(0, len(labelO)):
             othersPack[i].append(allO.getdata())
-        for i in range(0, len(labelU)):
-            userPack[i].append(allU.getdata())
+
+        userPack.append(allU.getdata())
 
         print('145',othersPack)
         print('146', userPack)
