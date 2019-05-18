@@ -112,9 +112,12 @@ def parser(path):
 
                 # road list 길이가 10 인데 마지막 weight값이 -10~10 이 아니면 에러
                 if len(road_list[i]) == 10:
+                    road_list[i][9] = int(road_list[i][9])
                     if not -10 <= int(road_list[i][9]) <= 10:
                         flag = False
                         print("value-weight must be in -10 ~ 10")
+
+                returnColumn(path + file_path + road_list[i][0], road_list[i][1].strip(), road_list[i][2].strip())
 
             # value 갯수 - road 갯수 만큼 other 파일을 읽고 딕셔너리 저장
             for i in range(value_num - road_num):
@@ -128,9 +131,12 @@ def parser(path):
 
                 # other file 길이가 6인데 마지막 weight 값이 -10~ 10 이 아니면 에러
                 if len(other_list[i]) == 6:
+                    other_list[i][5] = int(other_list[i][5])
                     if not -10 <= int(other_list[i][5]) <= 10:
                         flag = False
                         print("value-weight must be in -10 ~ 10")
+
+                returnColumn(path + file_path + other_list[i][0], other_list[i][1].strip(), other_list[i][2].strip())
 
         if flag:
             return fined_coverage, userdata_list, roads, others

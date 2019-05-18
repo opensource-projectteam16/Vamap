@@ -8,18 +8,18 @@ seoulbikeinfo.xlsx, Excel_Import_1, 위도, 경도
 5
 
 # The number of road files
-2
+1
 
 # Weights (number of value files = number of weights)
 0.3, 0.3, 0.1, 0.1, 0.2
 
 # Road file, sheet name, latitude, longitude, start latitude, start longitude, end latitude, end longitude (value, value-weight(-10 ~ 10 ))
 # This can be empty
-road1.csv, sheet1, lat, lon, start_x, start_y, end_x, end_y, val, -4
-road2.csv, sheet2, lat2, lon2, st_x, st_y, en_x, en_y
+road_test.xlsx, road_2, x, y, start_x, start_y, end_x, end_y, value, 4
 
 
 # Other value files, sheet name, latitude, longitude, (value, value-weight( -10 ~ 10 ))
-other1.csv, abc, a, b, va, 3
-other2.csv, sdfa, x, y
-other3.csv, acasc, x_, y_, v, 10
+seoul_building_1.xlsx, building_2, x, y, value, 3
+seoul_building_1.xlsx, building_3, x, y, value, 4
+seoul_building_1.xlsx, building_1, x, y, value, 2
+seoul_building_1.xlsx, building_4, x, y, value, 5
