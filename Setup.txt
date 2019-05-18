@@ -2,7 +2,7 @@
 120
 
 # User data file, sheet name, latitude, longitude
-mydata.csv, sheet_name, lat, lon
+seoulbikeinfo.xlsx, Excel_Import_1, 위도, 경도
 
 # The number of value files (this must be at least 1)
 5
