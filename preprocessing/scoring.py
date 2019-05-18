@@ -3,43 +3,41 @@
 from preprocessing.dataproc import dataproc
 from math import radians, cos, sin, asin, sqrt
 
-
 ''' 
 <How to work>   
 <Usage> 
  Input example  : Scoring(coverage, userSet, roadsSet, othersSet)
-                
+
                 roadsSet = {0.5 : [csv,sheet1,x,y,x1,y1,x2,y2,idth,5],...}
                 othersSet = { 가중치 : [csv, sheet, x,y],...}
                 userSet = [csv, sheet,x, y, value]
-                
-                
+
+
  Output example : list according below 
-                
+
                 roadsSet = [[x,y],...]
                 othersSet = [[x,y],...]
                 userSet = [[x, y, value],...]
- 
- 
+
+
  import dataproc : dataproc(Pack, mode)
-                
+
                 Pack : values() of Set
 
  '''
 
 
 class Scoring:
-    def __init__(self, coverage, userSet, roadsSet, othersSet ):
+    def __init__(self, coverage, userSet, roadsSet, othersSet):
         self.coverage = coverage
         self.userSet = userSet
         self.roadsSet = roadsSet
         self.othersSet = othersSet
 
-
-    def packingList(self, predata, Set):
-        print('40',predata)
+    # 2개 들어갈때 Weight 조정하기
+    def packingList(self, predata, Weight):
         predata = predata[0]
-#        predata = predata[0]
+        predata = predata[0]
 
         setindex = []
         sx = []
@@ -66,24 +64,30 @@ class Scoring:
             elif ps.names[0] == 'value':
                 va.append(predata[index])
 
-        print('69',sx)
         sx = sx[0]
         sy = sy[0]
-        st_x = st_x[0]
-        st_y = st_y[0]
-        ed_x = ed_x[0]
-        ed_y = ed_y[0]
-        va = va[0]
+        if st_x != []:
+            st_x = st_x[0]
+            st_y = st_y[0]
+            ed_x = ed_x[0]
+            ed_y = ed_y[0]
+        if va != []:
+            va = va[0]
 
         data = []
-
+        i = 0
         if st_x != list():
-            for i,j,k,l,m,n in zip(sx,sy,st_x,st_y,ed_x,ed_y):
-                data.append([float(i[0][0]),float(j[0][0]),float(k[0][0]),float(l[0][0]),float(m[0][0]),float(n[0][0]),predata[0]])
-
-        else :
+            for i, j, k, l, m, n in zip(sx, sy, st_x, st_y, ed_x, ed_y):
+                data.append(
+                    [float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),
+                     Weight[i]])
+                i += 1
+        elif va != list():
             for i, j, k in zip(sx, sy, va):
-                data.append([float(i[0][0]), float(j[0][0]),predata[0]])
+                data.append([float(i[0][0]), float(j[0][0]), 0])
+        else:
+            for i, j in zip(sx, sy):
+                data.append([float(i[0][0]), float(j[0][0]), 0])
 
         return data
 
@@ -105,58 +109,94 @@ class Scoring:
 
     def callObj(self):
 
-#        Rcount = len(self.roadsSet)
-#        Ocount = len(self.othersSet)
-#        Ucount = len(self.userSet)
+        #        Rcount = len(self.roadsSet)
+        #        Ocount = len(self.othersSet)
+        #        Ucount = len(self.userSet)
 
-        userPack = self.userSet
-        roadsPack = [self.roadsSet]
-        othersPack = [self.othersSet]
+        userSetting = self.userSet
+        roadsSetting = []
+        othersSetting = []
 
-        '''
-        for i in self.roadsSet.values():
-            a = i
-            roadsPack.append(a)
+        roadsPack = []
+        userPack = []
+        othersPack = []
 
-        for i in self.othersSet.values():
-            a = i
-            othersPack.append(a)
+        preroadW = list(self.roadsSet.keys())
+        preotherW = list(self.othersSet.keys())
+        roadWeight = []
+        otherWeight = []
+        uservalue = []
 
-        for i in self.userSet.values():
-            a = i
-            userPack.append(a)
-        '''
+        for i in preroadW:
+            a = i[2:]
+            a = float(a)
+            roadWeight.append(a)
+        for i in preotherW:
+            a = i[2:]
+            a = float(a)
+            otherWeight.append(a)
 
-        allR = dataproc(roadsPack, mode = 1)
-        allO = dataproc(othersPack, mode = 2)
-        allU = dataproc(userPack, mode = 0)
+        if self.roadsSet != {}:
+            for i in zip(self.roadsSet.values()):
+                a = i
+                roadsSetting.append([a])
+        if self.othersSet != {}:
+            for i in zip(self.othersSet.values()):
+                a = i
+                othersSetting.append([a])
 
-        labelR = allR.getdatalabel()
-        labelO = allO.getdatalabel()
-        labelU = allU.getdatalabel()
+        othersSetting = othersSetting[0]
+        othersSetting = othersSetting[0]
 
-        print('102',allU.getdata())
+        if roadsSetting != []:
+            allR = dataproc(roadsSetting, mode=1)
+            labelR = allR.getdatalabel()
+            roadsPack = [roadsPack]
+            for i in range(0, len(labelR)):
+                roadsPack[i].append(allR.getdata())
+            roadsPack = roadsPack[0]
 
-        for i in range(0, len(labelR)):
-            roadsPack[i].append(allR.getdata())
-        for i in range(0, len(labelO)):
-            othersPack[i].append(allO.getdata())
+        if othersSetting != []:
+            allO = dataproc(othersSetting, mode=2)
+            labelO = allO.getdatalabel()
+            othersPack = [othersPack]
+            for i in range(0, len(labelO)):
+                othersPack[i].append(allO.getdata())
+            othersPack = othersPack[0]
 
-        userPack.append(allU.getdata())
+        if userSetting != []:
+            allU = dataproc(userSetting, mode=0)
+            labelU = allU.getdatalabel()
+            userdata = [userPack]
+            userPack.append(allU.getdata())
 
-        print('145',othersPack)
-        print('146', userPack)
+        # labelR = allR.getdatalabel()
+        # labelO = allO.getdatalabel()
+        # labelU = allU.getdatalabel()
 
-        userPack = self.packingList(userPack,self.userSet)
-        roadsPack = self.packingList(roadsPack,self.roadsSet)
-        othersPack = self.packingList(othersPack,self.othersSet)
+        # roadsPack = [roadsPack]
+        # othersPack = [othersPack]
+        # userdata = [userPack]
 
-        return userPack,roadsPack, othersPack
+        # for i in range(0, len(labelR)):
+        #    roadsPack[i].append(allR.getdata())
+        # for i in range(0, len(labelO)):
+        #    othersPack[i].append(allO.getdata())
+        # userPack.append(allU.getdata())
 
+        # othersPack = othersPack[0]
+        # roadsPack = roadsPack[0]
 
-#newCoverage -> inCoverage -> converDis -> cal
+        if userPack != []:
+            userPack = self.packingList(userPack, uservalue)
+        if roadsPack != []:
+            roadsPack = self.packingList(roadsPack, roadWeight)
+        if othersPack != []:
+            othersPack = self.packingList(othersPack, otherWeight)
 
+        return userPack, roadsPack, othersPack
 
+    # newCoverage -> inCoverage -> converDis -> cal
 
     def newCoverage(self, userone):
         x1 = userone[0] - self.coverage / 133330
@@ -168,49 +208,49 @@ class Scoring:
 
         return upPoint, downPoint
 
-
-
-    def inCoverage(self,data):
-        upPoint, downPoint = self.newCoverage(data)
+    def inCoverage(self, user, data):
+        upPoint, downPoint = self.newCoverage(user)
 
         incover = []
-        for i in range(0,len(data)):
-            if data[i][0] > upPoint[0] and data[i][0] < downPoint[0] :
+        for i in range(0, len(data)):
+            if data[i][0] > upPoint[0] and data[i][0] < downPoint[0]:
                 incover.append(data[i])
             elif data[i][0] > downPoint[0]:
                 break;
 
-        for i in range(0,len(incover)):
-            if data[i][1] > upPoint[1] or data[i][1] < downPoint[1] :
-                del data[i]
+        x = []
+        for i in range(0, len(incover)):
+            if incover[i][1] > upPoint[1] or incover[i][1] < downPoint[1]:
+                x.append(incover[i])
+        for i in x:
+            incover.remove(i)
 
-        return data
+        return incover
 
+    #    roadsSet = {0.5 : [x,y,start,end], 가중치 :  [csv,sheet2,x,y,st,fn]}
 
-#    roadsSet = {0.5 : [x,y,start,end], 가중치 :  [csv,sheet2,x,y,st,fn]}
-
-    def inCoverageR(self,data):
-        upPoint, downPoint = self.newCoverage(data)
+    def inCoverageR(self, user, data):
+        upPoint, downPoint = self.newCoverage(user)
 
         incover = []
-        for i in range(0,len(data)):
-            if (data[i][0] > upPoint[0] and data[i][0] < downPoint[0])\
-                    or (data[i][2][0] > upPoint[0] and data[i][2][0]<downPoint[0])\
-                    or (data[i][3][0] > upPoint[0] and data[i][3][0]<downPoint[0]):
+        for i in range(0, len(data)):
+            if (data[i][0] > upPoint[0] and data[i][0] < downPoint[0]) \
+                    or (data[i][2][0] > upPoint[0] and data[i][2][0] < downPoint[0]) \
+                    or (data[i][3][0] > upPoint[0] and data[i][3][0] < downPoint[0]):
                 incover.append(data[i])
 
-        for i in range(0,len(incover)):
-            if data[i][1] > upPoint[1] or data[i][1] < downPoint[1] \
-                    or (data[i][2][1] > upPoint[1] and data[i][2][1] < downPoint[0]) \
-                    or (data[i][3][1] > upPoint[1] and data[i][3][1] < downPoint[0]):
-                del data[i]
+        x = []
+        for i in range(0, len(incover)):
+            if incover[i][1] > upPoint[1] or incover[i][1] < downPoint[1] \
+                    or (incover[i][2][1] > upPoint[1] and incover[i][2][1] < downPoint[0]) \
+                    or (incover[i][3][1] > upPoint[1] and incover[i][3][1] < downPoint[0]):
+                x.append(incover[i])
+        for i in x:
+            incover.remove(i)
 
-        return data
+        return incover
 
-
-
-
-    def convertDis(self, data, userdata):
+    def convertDis(self, userdata, data):
         # convert decimal degrees to radians
 
         # user data간의 비교 판단
@@ -230,59 +270,50 @@ class Scoring:
 
         return dislist
 
-
-
-## 가중치 매개변수 맞추기
-    def cal_(self, user, data, coverage, weight):
+    ## 가중치 매개변수 맞추기
+    def cal_(self, user, data, coverage):
         # value = weight*(distance/coverage)
         sum = 0;
-        data = self.inCoverage(data)
+        data = self.inCoverage(user, data)
 
         pre = self.convertDis(user, data)
 
-        for i in pre:
-                x = data[i][2] * (i / coverage)
-                sum += x
-
+        for i in range(0, len(pre)):
+            x = data[i][2] * (i / coverage)
+            sum += x
 
         return sum
 
-
-
-    def cal_roads(self, user, data, coverage, weight):
+    def cal_roads(self, user, data, coverage):
         # value = weight*(distance/coverage)
 
         sum = 0;
-        i=0
+        i = 0
         middle = []
         start = []
         end = []
-        for i in range(0,len(data)):
-            middle.append([data[i][0],data[i][1]])
+        for i in range(0, len(data)):
+            middle.append([data[i][0], data[i][1]])
             start.append(data[i][2])
             end.append(data[i][3])
 
-        middleD = self.convertDis(user, middle, coverage)
-        startD = self.convertDis(user, start, coverage)
-        endD = self.convertDis(user, end, coverage)
-
+        middleD = self.convertDis(user, middle)
+        startD = self.convertDis(user, start)
+        endD = self.convertDis(user, end)
 
         distantList = []
-        pre=[]
-        for i in range(0,len(data)):
-            pre.append(middleD[i],startD[i],endD[i])
+        pre = []
+        for i in range(0, len(data)):
+            pre.append(middleD[i], startD[i], endD[i])
             pre[i].sort()
-            distantList.append([pre[i][0],data[i][4]])
-
+            distantList.append([pre[i][0], data[i][6]])
 
         for i in distantList:
-            x =  data[i][4]* (i / coverage)
+            x = data[i][6] * (i / coverage)
             sum += x
-            i+=1
+            i += 1
 
         return sum
-
-
 
     def valueScore(self):
         user_data, roads_data, others_data = self.callObj()
@@ -291,23 +322,18 @@ class Scoring:
         count = 0
 
         for user in user_data:
-            x = self.cal_roads(user, roads_data)
+            x = self.cal_roads(user, roads_data, self.coverage)
             y = self.cal_(user, others_data, self.coverage)
             z = self.cal_(user, user_data, self.coverage)
 
-
             resultUser[count][2] = x + z + y
-            count +=1
+            count += 1
 
-        for i in range(0,len(roads_data)):
-            for j in range(2,7):
+        for i in range(0, len(roads_data)):
+            for j in range(2, 7):
                 del roads_data[i][j]
 
-        for i in range(0,len(others_data)):
+        for i in range(0, len(others_data)):
             del others_data[i][2]
 
-        print("roads" + roads_data)
-        print("other" + others_data)
-        print("user" + resultUser)
-
-        return roads_data, others_data, resultUser
+        return resultUser, roads_data, others_data
