@@ -90,6 +90,9 @@ def parser(path):
             for i in range(value_num):
                 other_list[i] = array[5 + i].split(',')
                 others[weight_list_string[i]] = other_list[i]
+
+                for j in range(len(other_list[i])):
+                    other_list[i][j] = other_list[i][j].strip()
                 if not (len(other_list[i]) == 4 or len(other_list[i]) == 6):
                     flag = False
                     print("Please check otherfile form.")
@@ -105,6 +108,9 @@ def parser(path):
                 road_list[i] = array[5 + i].split(',')
                 roads[weight_list_string[i]] = road_list[i]
 
+                for j in range(len(road_list[i])):
+                    road_list[i][j] = road_list[i][j].strip()
+
                 # road list 길이가 8이나 10이 아닌경우 에러
                 if not (len(road_list[i]) == 8 or len(road_list[i]) == 10):
                     flag = False
@@ -117,12 +123,15 @@ def parser(path):
                         flag = False
                         print("value-weight must be in -10 ~ 10")
 
-                returnColumn(path + file_path + road_list[i][0], road_list[i][1].strip(), road_list[i][2].strip())
+                #returnColumn(path + file_path + road_list[i][0], road_list[i][1].strip(), road_list[i][2].strip())
 
             # value 갯수 - road 갯수 만큼 other 파일을 읽고 딕셔너리 저장
             for i in range(value_num - road_num):
                 other_list[i] = array[-(value_num - road_num) + i].split(',')
                 others[weight_list_string[-(value_num - road_num) + i]] = other_list[i]
+
+                for j in range(len(other_list[i])):
+                    other_list[i][j] = other_list[i][j].strip()
 
                 # other file 길이가 4, 6이 아니면 에러
                 if not (len(other_list[i]) == 4 or len(other_list[i]) == 6):
@@ -136,7 +145,7 @@ def parser(path):
                         flag = False
                         print("value-weight must be in -10 ~ 10")
 
-                returnColumn(path + file_path + other_list[i][0], other_list[i][1].strip(), other_list[i][2].strip())
+                #returnColumn(path + file_path + other_list[i][0], other_list[i][1].strip(), other_list[i][2].strip())
 
         if flag:
             return fined_coverage, userdata_list, roads, others
