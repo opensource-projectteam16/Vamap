@@ -1,5 +1,5 @@
 import folium
-
+import os
 
 # Hyunjae Lee is in charge
 
@@ -15,35 +15,45 @@ import folium
 # Load default markers (roads, buildings, subways)
 
 
-def Make_Default_Markers(MapObject, roads, buildings, subways):
+def Make_Default_Markers(Map_Object, scored_roads, scored_others, path):
 
     # Mark roads
-    # skip roads
+    # eachRoad[0] = coorx
+    # eachRoad[1] = coory
 
-    # Mark buildings ::
-    # building[0] = coorx,
-    # building[1] = coory,
-    # building[2] = value of the building
+    print('roadIcon is loaded from {}'.format(os.path.join(path, 'roadIcon')))
 
-    for building in buildings:
-        folium.Marker([building[0], building[1]],
-                      tooltip=building[2]).add_to(MapObject)
+    roadIcon = folium.features.CustomIcon(
+        os.path.join(path, 'roadIcon'), icon_size=(28, 30))
 
-    # Mark subways ::
-    # subway[0] = coorx,
-    # subway[1] = coory,
-    # subway[2] = the name of the subway station
+    for eachRoad in scored_roads:
+        folium.Marker([eachRoad[0], eachRoad[1]],
+                      icon=folium.Icon(icon=roadIcon)
+                      ).add_to(MapObject)
 
-    for subway in subways:
-        folium.Marker([subway[0], subway[1]],
-                      tooltip=subway[2]).add_to(MapObject)
+    # Mark others marker ::
+    # eachObject[0] = coorx,
+    # eachObject[1] = coory,
+
+    print('othersIcon is loaded from {}'.format(
+        os.path.join(path, 'othersIcon')))
+    othersIcon = folium.features.CustomIcon(url, icon_size=(28, 30))
+
+    for eachObject in scored_others:
+        folium.Marker([eachObject[0], eachObject[1]],
+                      icon=folium.Icon(icon=othersIcon)
+                      ).add_to(MapObject)
 
 
 # Load value markers and circlemarker based on user input
 # (calculated by 'scroing')
 
 
-def Make_Value_Markers(MapObject, user_data, coverage):
+def Make_Value_Markers(MapObject, user_data, coverage, path):
+
+    userIcon = folium.features.CustomIcon(
+        os.path.join(path, 'vamap_logo'), icon_size=(28, 30))
+
     for data in user_data:
 
         loc = [data[0], data[1]]
@@ -56,13 +66,13 @@ def Make_Value_Markers(MapObject, user_data, coverage):
             color = '#F7BC05'
 
         folium.Marker(loc,
-                      tooltip=data[3]).add_to(MapObject)
+                      icon=folium.Icon(icon=userIcon)).add_to(MapObject)
 
         folium.Circle(
             loc,
             radius=coverage,
             # popup=''
             color=color,
-            fill=True,
+            fill=False,
             fill_color=color
         ).add_to(MapObject)

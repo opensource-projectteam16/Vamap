@@ -41,12 +41,14 @@ def main():
     # arg = checkArgument(sys.argv)
     print(parser(path))
     # coverage, user_data, roads, others = parser(path)
-        #arg = checkArgument(sys.argv)
-    coverage = 5000
+    #arg = checkArgument(sys.argv)
+    coverage = 50
 
     user_data = ['seoulbikeinfo_test.xlsx', 'Excel_Import_1', '위도', '경도']
-    roads = {'1) 0.3' : ['road_test.xlsx', 'road_2', 'x', 'y', 'start_x', 'start_y', 'end_x', 'end_y', 'value', 4]}
-    others = {'1) 0.2' : ['seoul_building_1_test.xlsx', 'building_2', 'x', 'y', 'value', 3],'2) 0.5' : ['seoul_building_1_test.xlsx', 'building_3', 'x', 'y', 'value', 4]}
+    roads = {'1) 0.3': ['road_test.xlsx', 'road_2', 'x', 'y',
+                        'start_x', 'start_y', 'end_x', 'end_y', 'value', 4]}
+    others = {'1) 0.2': ['seoul_building_1_test.xlsx', 'building_2', 'x', 'y', 'value', 3], '2) 0.5': [
+        'seoul_building_1_test.xlsx', 'building_3', 'x', 'y', 'value', 4]}
 
     # TODO Check error handling is working well.
     print(coverage, user_data, roads, others)
@@ -75,11 +77,11 @@ def main():
     # Load custom marker icon
 
     # Load default markers (roads, buildings, subways)
-    # Make_Default_Markers(Map_Object, scored_roads, scored_others)
+    Make_Default_Markers(Map_Object, scored_roads, scored_others, path)
 
     # Load value markers and circlemarker based on user input
     # (calculated by 'scoring')
-    # Make_Value_Markers(Map_Object, scored_user_data,, coverage)
+    Make_Value_Markers(Map_Object, scored_user_data, coverage, path)
 
     # Add choropleth
     # Map_Object.choropleth(
