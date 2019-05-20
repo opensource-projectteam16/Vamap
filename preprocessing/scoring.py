@@ -35,7 +35,7 @@ class Scoring:
         self.othersSet = othersSet
 
     # 2개 들어갈때 Weight 조정하기
-    def packingList(self, predata, Weight):
+    def packingList(self, predata, Weight, mode):
         print('2')
         predata = predata[0]
         predata = predata[0]
@@ -68,19 +68,20 @@ class Scoring:
         data = []
         sx = sx[0]
         sy = sy[0]
-        if st_x != []:
+        if mode == 0:
+            for i, j in zip(sx, sy):
+                data.append([float(i[0][0]), float(j[0][0]), 1])
+        if mode == 2 :
+            va = va[0]
+            for i, j, k in zip(sx, sy, va):
+                data.append([float(i[0][0]), float(j[0][0]), Weight[i]])
+        if mode == 1:
             st_x = st_x[0]
             st_y = st_y[0]
             ed_x = ed_x[0]
             ed_y = ed_y[0]
             for i, j, k, l, m, n in zip(sx, sy, st_x, st_y, ed_x, ed_y):
                 data.append([float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),Weight[i]])
-        if va != []:
-            va = va[0]
-            for i, j, k in zip(sx, sy, va):
-                data.append([float(i[0][0]), float(j[0][0]), Weight[i]])
-        for i, j in zip(sx, sy):
-            data.append([float(i[0][0]), float(j[0][0]), 1])
 
         return data
 
@@ -140,16 +141,18 @@ class Scoring:
                 othersSetting.append([a])
 
         print('146',othersSetting)
-        print('145',roadsSetting)
+        mode = 0
         if roadsSetting != []:
-            allR = dataproc(roadsSetting, mode=1)
             roadsSetting = roadsSetting[0]
             roadsSetting = roadsSetting[0]
+            print('145', roadsSetting)
+            allR = dataproc(roadsSetting[0], mode=1)
             labelR = allR.getdatalabel()
             roadsPack = [roadsPack]
             for i in range(0, len(labelR)):
                 roadsPack[i].append(allR.getdata())
             roadsPack = roadsPack[0]
+            print('155', roadsPack)
 
         if othersSetting != []:
             othersSetting = othersSetting[0]
@@ -185,11 +188,11 @@ class Scoring:
         # roadsPack = roadsPack[0]
 
         if userPack != []:
-            userPack = self.packingList(userPack, uservalue)
+            userPack = self.packingList(userPack, uservalue, 0)
         if roadsPack != []:
-            roadsPack = self.packingList(roadsPack, roadWeight)
+            roadsPack = self.packingList(roadsPack, roadWeight, 1)
         if othersPack != []:
-            othersPack = self.packingList(othersPack, otherWeight)
+            othersPack = self.packingList(othersPack, otherWeight, 2)
 
         return userPack, roadsPack, othersPack
 
@@ -333,9 +336,10 @@ class Scoring:
             resultUser[count][2] = x + z + y
             count += 1
 
+        roads = []
+        others = []
         for i in range(0, len(roads_data)):
-            for j in range(2, 7):
-                del roads_data[i][j]
+                roads.append([roads_data[i][0],roads_data[i][1]])
 
         for i in range(0, len(others_data)):
             del others_data[i][2]
