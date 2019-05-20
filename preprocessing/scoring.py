@@ -36,6 +36,7 @@ class Scoring:
 
     # 2개 들어갈때 Weight 조정하기
     def packingList(self, predata, Weight):
+        print('2')
         predata = predata[0]
         predata = predata[0]
 
@@ -64,6 +65,7 @@ class Scoring:
             elif ps.names[0] == 'value':
                 va.append(predata[index])
 
+        data = []
         sx = sx[0]
         sy = sy[0]
         if st_x != []:
@@ -71,23 +73,14 @@ class Scoring:
             st_y = st_y[0]
             ed_x = ed_x[0]
             ed_y = ed_y[0]
+            for i, j, k, l, m, n in zip(sx, sy, st_x, st_y, ed_x, ed_y):
+                data.append([float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),Weight[i]])
         if va != []:
             va = va[0]
-
-        data = []
-        i = 0
-        if st_x != list():
-            for i, j, k, l, m, n in zip(sx, sy, st_x, st_y, ed_x, ed_y):
-                data.append(
-                    [float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),
-                     Weight[i]])
-                i += 1
-        elif va != list():
             for i, j, k in zip(sx, sy, va):
-                data.append([float(i[0][0]), float(j[0][0]), 0])
-        else:
-            for i, j in zip(sx, sy):
-                data.append([float(i[0][0]), float(j[0][0]), 0])
+                data.append([float(i[0][0]), float(j[0][0]), Weight[i]])
+        for i, j in zip(sx, sy):
+            data.append([float(i[0][0]), float(j[0][0]), 1])
 
         return data
 
@@ -108,6 +101,7 @@ class Scoring:
      '''
 
     def callObj(self):
+        print('1')
 
         #        Rcount = len(self.roadsSet)
         #        Ocount = len(self.othersSet)
@@ -145,11 +139,12 @@ class Scoring:
                 a = i
                 othersSetting.append([a])
 
-        othersSetting = othersSetting[0]
-        othersSetting = othersSetting[0]
-
+        print('146',othersSetting)
+        print('145',roadsSetting)
         if roadsSetting != []:
             allR = dataproc(roadsSetting, mode=1)
+            roadsSetting = roadsSetting[0]
+            roadsSetting = roadsSetting[0]
             labelR = allR.getdatalabel()
             roadsPack = [roadsPack]
             for i in range(0, len(labelR)):
@@ -157,6 +152,8 @@ class Scoring:
             roadsPack = roadsPack[0]
 
         if othersSetting != []:
+            othersSetting = othersSetting[0]
+            othersSetting = othersSetting[0]
             allO = dataproc(othersSetting, mode=2)
             labelO = allO.getdatalabel()
             othersPack = [othersPack]
@@ -199,6 +196,7 @@ class Scoring:
     # newCoverage -> inCoverage -> converDis -> cal
 
     def newCoverage(self, userone):
+        print('4')
         x1 = userone[0] - self.coverage / 133330
         y1 = userone[1] + self.coverage / (133330 * cos(userone[0]))
         upPoint = [x1, y1]
@@ -209,6 +207,8 @@ class Scoring:
         return upPoint, downPoint
 
     def inCoverage(self, user, data):
+        print('5')
+
         upPoint, downPoint = self.newCoverage(user)
 
         incover = []
@@ -251,6 +251,7 @@ class Scoring:
         return incover
 
     def convertDis(self, userdata, data):
+        print('6')
         # convert decimal degrees to radians
 
         # user data간의 비교 판단
@@ -272,16 +273,19 @@ class Scoring:
 
     ## 가중치 매개변수 맞추기
     def cal_(self, user, data, coverage):
+        print('3')
         # value = weight*(distance/coverage)
         sum = 0;
         data = self.inCoverage(user, data)
 
         pre = self.convertDis(user, data)
+        print('282',pre)
 
         for i in range(0, len(pre)):
-            x = data[i][2] * (i / coverage)
+            x = data[i][2] * (pre[i] / coverage)
             sum += x
 
+        print('287',sum)
         return sum
 
     def cal_roads(self, user, data, coverage):

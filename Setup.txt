@@ -2,7 +2,7 @@
 120
 
 # User data file, sheet name, latitude, longitude
-seoulbikeinfo.xlsx, Excel_Import_1, 위도, 경도
+seoulbikeinfo_test.xlsx, Excel_Import_1, 위도, 경도
 
 # The number of value files (this must be at least 1)
 5
@@ -21,5 +21,3 @@ road_test.xlsx, road_2, x, y, start_x, start_y, end_x, end_y, value, 4
 # Other value files, sheet name, latitude, longitude, (value, value-weight( -10 ~ 10 ))
 seoul_building_1.xlsx, building_2, x, y, value, 3
 seoul_building_1.xlsx, building_3, x, y, value, 4
-seoul_building_1.xlsx, building_1, x, y, value, 2
-seoul_building_1.xlsx, building_4, x, y, value, 5
