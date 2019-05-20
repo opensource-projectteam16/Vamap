@@ -1,3 +1,8 @@
+<p align="center">
+  <img width="100" height="100" src="./static/vamap_logo.png">
+</p>
+
+
 # VAMAP
 
 A SIMPLE USER DATA-DRIVEN MAP-ANALYZING TOOL BASED ON FOLIUM
@@ -12,20 +17,30 @@ pip install folium
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+1. Cloning our repo
 
 ```
 git clone https://github.com/opensource-projectteam16/Team16_Development.git
 ```
 
-And move to the repository, write setup.txt 
-then execute command line interface
+2. Change addresses written in your excel file to location values through commands below
+
+```
+python roadmanager.py <your_roadfile.xlsx> <sheet_name> <column_name> 
+```
+this will return a pair of new columns that are ***<column_name>_x***  and ***<column_name>_y*** which refer latitude, longitude.
+
+
+3. Set up your input variables and Run main
+
+Write setup.txt according to setup rules (you can check them in the file)
+then execute command line below
 
 ```
 python main.py setup.txt
 ```
+
+4. Then you will get ***MAP.html*** which shows you **2 different markers**, which are **roads and others**, and **one marker evaluated by surrounded objects that are in the given coverage** 
 
 ## Deployment
 
@@ -45,7 +60,6 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **SUNGJAE MIN** - *Developer* - [alstjdwo1601](https://github.com/alstjdwo1601)
 * **SANGMIN LEE** - *Developer* - [sangminBangbada](https://github.com/sangminBangbada)
 * **SEOKCHEON JU** - *Developer* - [smallfish06](https://github.com/smallfish06)
-* **YOOSEOK JEONG** - *Developer* - [jeong5575](https://github.com/jeong5575)
 
 See also the list of [contributors](https://github.com/opensource-projectteam16/Team16_Development/blob/master/Contributors.md) who participated in this project.
 
