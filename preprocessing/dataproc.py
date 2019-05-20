@@ -88,42 +88,42 @@ class dataproc:
             for index in range(0,len(self.maindata)+1):
                 print('hi1')
                 if index==0:
-                    self.maindata[0][index].dtype.names='x'
+                    self.maindata[0][index].dtype.names=('x',)
                 elif index==1:
-                    self.maindata[0][index].dtype.names='y'
+                    self.maindata[0][index].dtype.names=('y',)
                 elif index==2:
-                    self.maindata[0][index].dtype.names='value'
+                    self.maindata[0][index].dtype.names=('value',)
                 else:
-                    self.maindata[0][index].dtype.names='string'
+                    self.maindata[0][index].dtype.names=('string',)
         if mode==1:
-            for index in range(0,len(self.maindata)+1):
+            for index in range(0,len(self.maindata[0])):
                 if index==0:
-                    self.maindata[0][index].dtype.names='x'
+                    self.maindata[0][index].dtype.names=('x',)
                 elif index==1:
-                    self.maindata[0][index].dtype.names='y'
+                    self.maindata[0][index].dtype.names=('y',)
                 elif index==2:
-                    self.maindata[0][index].dtype.names='x1'
+                    self.maindata[0][index].dtype.names=('x1',)
                 elif index==3:
-                    self.maindata[0][index].dtype.names='y1'
+                    self.maindata[0][index].dtype.names=('y1',)
                 elif index==4:
-                    self.maindata[0][index].dtype.names='x2'
+                    self.maindata[0][index].dtype.names=('x2',)
                 elif index==5:
-                    self.maindata[0][index].dtype.names='y2'
+                    self.maindata[0][index].dtype.names=('y2',)
                 elif index==6:
-                    self.maindata[0][index].dtype.names='value'
+                    self.maindata[0][index].dtype.names=('value',)
                 else:
-                    self.maindata[0][index].dtype.names='string'
+                    self.maindata[0][index].dtype.names=('string',)
         if mode==2:
             for datalist in self.maindata:
                 for index in zip(datalist,range(0,len(datalist)+1)):
                     if index==0:
-                        datalist[0][index].dtype.names='x'
+                        datalist[0][index].dtype.names=('x',)
                     elif index==1:
-                        datalist[0][index].dtype.names='y'
+                        datalist[0][index].dtype.names=('y',)
                     elif index==2:
-                        datalist[0][index].dtype.names='value'
+                        datalist[0][index].dtype.names=('value',)
                     else:
-                        datalist[0][index].dtype.names='string'
+                        datalist[0][index].dtype.names=('string',)
                 
     def changecolumnname(self,columnname):
         if len(columnname):
@@ -175,16 +175,11 @@ class excelmanager:
         namelist=[]
         typelist=[]
         listtype=0
-        for p,r in zip(load_sheet[2],load_sheet[1]):
-            for name in columnname:
+        for name in columnname:
+            for p,r in zip(load_sheet[2],load_sheet[1]):
                 if r.value==name:
-                    if isinstance(p.value,str):
-                        typelist.append(object)
-                        namelist.append(name)
-                    else:
-                        typelist.append(np.float64)
-                        namelist.append(name)
-
+                    typelist.append(object)
+                    namelist.append(name)
         dat=[]
         for name in namelist:
             for r in load_sheet[1]:
