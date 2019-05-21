@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 import os
 # developed modules
-from main.parser import parser, checkArgument
+from main.parser import parser, checkArgument, printparser
 from main.load import Load
 from main.map3d import Map3d, TileLayer3d
 from main.marker_func import Make_Default_Markers, Make_Value_Markers
@@ -28,6 +28,7 @@ def main():
     # path
     path = os.getcwd()
 
+
     # parsing setup.txt
     '''
     Sungjae Min is in charge
@@ -40,6 +41,7 @@ def main():
 
     arg = checkArgument(sys.argv)
     coverage, user_data, roads, others = parser(path)
+    printparser(coverage, user_data, roads, others)
 
     # user_data = ['seoulbikeinfo_test.xlsx', 'Excel_Import_1', '위도', '경도']
     # roads = {'1) 0.3': ['road_test.xlsx', 'road_2', 'x', 'y',
@@ -48,7 +50,6 @@ def main():
     #     'seoul_building_1_test.xlsx', 'building_3', 'x', 'y', 'value', 4]}
 
     # TODO Check error handling is working well.
-    print(coverage, user_data, roads, others)
 
     # Load csv, json files
     load_instance = Load(path)
@@ -66,7 +67,7 @@ def main():
 
     # scored_user_data, scored_roads, scored_others = preprocessing.valueScore()
 
-    print('main', scored_user_data)
+    #print('main', scored_user_data)
 
     # Global tooltip
     tooltip = 'Click For More Info'
@@ -74,11 +75,11 @@ def main():
     # Load custom marker icon
 
     # Load default markers (roads, buildings, subways)
-    Make_Default_Markers(Map_Object, scored_roads, scored_others, path)
+    #Make_Default_Markers(Map_Object, scored_roads, scored_others, path)
 
     # Load value markers and circlemarker based on user input
     # (calculated by 'scoring')
-    Make_Value_Markers(Map_Object, scored_user_data, coverage, path)
+    #Make_Value_Markers(Map_Object, scored_user_data, coverage, path)
 
     # Add choropleth
     # Map_Object.choropleth(

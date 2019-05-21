@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Hyunjae Lee , Sungjae Min is in charge
+from fiona import path
 from roadmanager import returnColumn
 import os
 import platform
@@ -11,7 +12,6 @@ def parser(path):
     try:
         flag = True
         # TODO : Test open setup.txt file
-        # with open("C:/Users/user/Documents/GitHub/Team16_Development/Setup.txt", 'r') as ins:
         with open(path + "/Setup.txt", 'r', encoding='utf-8') as ins:
             array = []
             for line in ins:
@@ -23,6 +23,7 @@ def parser(path):
                         continue
                     array.append(line)
 
+        # save Setup.txt data
         coverage = int(array[0])
         value_num = int(array[2])
         road_num = int(array[3])
@@ -31,15 +32,17 @@ def parser(path):
         for i in range(4):
             userdata_list[i] = array[1].split(',')[i].strip()
 
+        # Rule of User data form
         if not len(userdata_list[2:]) == 2:
             flag = False
             print("Userdata must include filename, sheetname, latitude, longitude")
 
-        # value_num 갯수만큼만 list에 weight추가
+        # Number of weights must be same as Number of values
         weight_list = [0 for x in range(value_num)]
         for i in range(value_num):
             weight_list[i] = float(array[4].split(',')[i].strip())
 
+        # Designate file path that are different platform
         system = platform.system()
         if system == 'Linux':
             user_path = "/data/user_data/"
@@ -48,15 +51,16 @@ def parser(path):
             user_path = "\\data\\user_data\\"
             file_path = "\\data\\base_data\\"
 
+        # Test User data's validation
         managed_userdata_list = [0 for x in range(len(userdata_list[2:]))]
         for i in range(len(userdata_list[2:])):
             managed_userdata_list[i] = returnColumn(
                 path + user_path + userdata_list[0], userdata_list[1], userdata_list[2+i])
 
-        # 10m 단위로만 input 으로 들어가게끔 coverage 값 수정
+        # Set Coverage unit
         fined_coverage = coverage - coverage % 10
 
-        # 수정된 coverage 값이 조건에 부합하는지 확인, 아닐 경우 에러메세지 출력
+        # Check Coverage range
         if not 50 <= fined_coverage <= 1000:
             flag = False
             print("Coverage value is not valid. Coverage must be '50 ~ 1000(m)'")
@@ -69,6 +73,7 @@ def parser(path):
             flag = False
             print("Number of road files can't be larger than value files.")
 
+        # Sum of Weights are 1
         if not sum(weight_list) == 1:
             flag = False
             print("Sum of Weight must be 1. Please check Weight values")
@@ -80,10 +85,9 @@ def parser(path):
 
         weight_list_string = [0 for x in range(value_num)]
         for i in range(value_num):
-            weight_list_string[i] = str(
-                i+1) + ")" + str(array[4].split(',')[i])
+            weight_list_string[i] = str(i+1) + ") " + str(array[4].split(',')[i])
 
-        # road file 갯수를 0 이라고 한 경우
+        # User inputs number of roads file '0'
         if road_num == 0:
             for i in range(value_num):
                 other_list[i] = array[5 + i].split(',')
@@ -99,9 +103,8 @@ def parser(path):
                         flag = False
                         print("value-weight must be in -10 ~ 10")
 
-        # road file 이 존재하는 경우
         else:
-            # road file 갯수 만큼 읽고 딕셔너리에 저장
+            # save as dict
             for i in range(road_num):
                 road_list[i] = array[5 + i].split(',')
                 roads[weight_list_string[i]] = road_list[i]
@@ -109,12 +112,12 @@ def parser(path):
                 for j in range(len(road_list[i])):
                     road_list[i][j] = road_list[i][j].strip()
 
-                # road list 길이가 8이나 10이 아닌경우 에러
+
                 if not (len(road_list[i]) == 8 or len(road_list[i]) == 10):
                     flag = False
                     print("Please check roadfile form.")
 
-                # road list 길이가 10 인데 마지막 weight값이 -10~10 이 아니면 에러
+                # weight value must be in -10 ~ 10
                 if len(road_list[i]) == 10:
                     road_list[i][9] = int(road_list[i][9])
                     if not -10 <= int(road_list[i][9]) <= 10:
@@ -123,23 +126,18 @@ def parser(path):
 
                 #returnColumn(path + file_path + road_list[i][0], road_list[i][1].strip(), road_list[i][2].strip())
 
-            # value 갯수 - road 갯수 만큼 other 파일을 읽고 딕셔너리 저장
+            # save as dict
             for i in range(value_num - road_num):
                 other_list[i] = array[-(value_num - road_num) + i].split(',')
-                others[weight_list_string[-(value_num -
-                                            road_num) + i]] = other_list[i]
+                others[weight_list_string[-(value_num - road_num) + i]] = other_list[i]
 
                 for j in range(len(other_list[i])):
                     other_list[i][j] = other_list[i][j].strip()
 
-                # other file 길이가 4, 6이 아니면 에러
-                # TODO 성재야 수정해줘
-                print(len(other_list[i]))
                 if not (len(other_list[i]) == 4 or len(other_list[i]) == 6):
                     flag = False
                     print("Please check otherfile form.")
 
-                # other file 길이가 6인데 마지막 weight 값이 -10~ 10 이 아니면 에러
                 if len(other_list[i]) == 6:
                     other_list[i][5] = int(other_list[i][5])
                     if not -10 <= int(other_list[i][5]) <= 10:
@@ -173,3 +171,13 @@ def checkArgument(argv):
 def strToint(str):
     float_str = float(str.split(')')[1].strip())
     return float_str
+
+def printparser(coverage, user_data, roads, others):
+    print("============================================================================================================================================================================")
+    print("[Coverage] : ", coverage)
+    print("\n[User data] : ", user_data)
+    print("\n[Roads files & Weights] : ", roads)
+    print("\n[Other files & Weights] : ", others)
+    print("============================================================================================================================================================================")
+
+    return
