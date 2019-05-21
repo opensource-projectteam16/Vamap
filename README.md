@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100" height="100" src="./static/vamap_logo.png">
+  <img width="500" height="300" src="./static/readme_logo.png">
 </p>
 
 
