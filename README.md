@@ -44,15 +44,16 @@ python main.py setup.txt
 
 ## Deployment
 
+[GIF 파일 반드시 준비하자]
 Add additional notes about how to deploy this on a live system
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/opensource-projectteam16/Team16_Development/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/opensource-projectteam16/Vamap/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/opensource-projectteam16/Vamap/blob/master/tags). 
 
 ## Authors
 
@@ -61,14 +62,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **SANGMIN LEE** - *Developer* - [sangminBangbada](https://github.com/sangminBangbada)
 * **SEOKCHEON JU** - *Developer* - [smallfish06](https://github.com/smallfish06)
 
-See also the list of [contributors](https://github.com/opensource-projectteam16/Team16_Development/blob/master/Contributors.md) who participated in this project.
+See also the list of [contributors](https://github.com/opensource-projectteam16/Vamap/blob/master/Contributors.md) who participated in this project.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/opensource-projectteam16/Team16_Development/blob/master/LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/opensource-projectteam16/Vamap/blob/master/LICENSE.md) file for details
