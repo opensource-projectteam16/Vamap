@@ -1,9 +1,8 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Hyunjae Lee , Sungjae Min is in charge
 from roadmanager import returnColumn
 import os
 import platform
-
 
 
 def parser(path):
@@ -12,7 +11,7 @@ def parser(path):
     try:
         flag = True
         # TODO : Test open setup.txt file
-        #with open("C:/Users/user/Documents/GitHub/Team16_Development/Setup.txt", 'r') as ins:
+        # with open("C:/Users/user/Documents/GitHub/Team16_Development/Setup.txt", 'r') as ins:
         with open(path + "/Setup.txt", 'r', encoding='utf-8') as ins:
             array = []
             for line in ins:
@@ -51,8 +50,8 @@ def parser(path):
 
         managed_userdata_list = [0 for x in range(len(userdata_list[2:]))]
         for i in range(len(userdata_list[2:])):
-            managed_userdata_list[i] = returnColumn(path + user_path + userdata_list[0], userdata_list[1], userdata_list[2+i])
-
+            managed_userdata_list[i] = returnColumn(
+                path + user_path + userdata_list[0], userdata_list[1], userdata_list[2+i])
 
         # 10m 단위로만 input 으로 들어가게끔 coverage 값 수정
         fined_coverage = coverage - coverage % 10
@@ -61,8 +60,6 @@ def parser(path):
         if not 50 <= fined_coverage <= 1000:
             flag = False
             print("Coverage value is not valid. Coverage must be '50 ~ 1000(m)'")
-
-
 
         if value_num < 1:
             flag = False
@@ -83,7 +80,8 @@ def parser(path):
 
         weight_list_string = [0 for x in range(value_num)]
         for i in range(value_num):
-            weight_list_string[i] = str(i+1) +")"+ str(array[4].split(',')[i])
+            weight_list_string[i] = str(
+                i+1) + ")" + str(array[4].split(',')[i])
 
         # road file 갯수를 0 이라고 한 경우
         if road_num == 0:
@@ -128,12 +126,15 @@ def parser(path):
             # value 갯수 - road 갯수 만큼 other 파일을 읽고 딕셔너리 저장
             for i in range(value_num - road_num):
                 other_list[i] = array[-(value_num - road_num) + i].split(',')
-                others[weight_list_string[-(value_num - road_num) + i]] = other_list[i]
+                others[weight_list_string[-(value_num -
+                                            road_num) + i]] = other_list[i]
 
                 for j in range(len(other_list[i])):
                     other_list[i][j] = other_list[i][j].strip()
 
                 # other file 길이가 4, 6이 아니면 에러
+                # TODO 성재야 수정해줘
+                print(len(other_list[i]))
                 if not (len(other_list[i]) == 4 or len(other_list[i]) == 6):
                     flag = False
                     print("Please check otherfile form.")
@@ -166,7 +167,7 @@ def checkArgument(argv):
         print('You need "Setup.txt"')
         quit()
     else:
-        return [1]
+        return argv[1]
 
 
 def strToint(str):

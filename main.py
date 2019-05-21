@@ -38,17 +38,14 @@ def main():
 
     '''
 
-    # arg = checkArgument(sys.argv)
-    print(parser(path))
-    # coverage, user_data, roads, others = parser(path)
-    #arg = checkArgument(sys.argv)
-    coverage = 50
+    arg = checkArgument(sys.argv)
+    coverage, user_data, roads, others = parser(path)
 
-    user_data = ['seoulbikeinfo_test.xlsx', 'Excel_Import_1', '위도', '경도']
-    roads = {'1) 0.3': ['road_test.xlsx', 'road_2', 'x', 'y',
-                        'start_x', 'start_y', 'end_x', 'end_y', 'value', 4]}
-    others = {'1) 0.2': ['seoul_building_1_test.xlsx', 'building_2', 'x', 'y', 'value', 3], '2) 0.5': [
-        'seoul_building_1_test.xlsx', 'building_3', 'x', 'y', 'value', 4]}
+    # user_data = ['seoulbikeinfo_test.xlsx', 'Excel_Import_1', '위도', '경도']
+    # roads = {'1) 0.3': ['road_test.xlsx', 'road_2', 'x', 'y',
+    #                     'start_x', 'start_y', 'end_x', 'end_y', 'value', 4]}
+    # others = {'1) 0.2': ['seoul_building_1_test.xlsx', 'building_2', 'x', 'y', 'value', 3], '2) 0.5': [
+    #     'seoul_building_1_test.xlsx', 'building_3', 'x', 'y', 'value', 4]}
 
     # TODO Check error handling is working well.
     print(coverage, user_data, roads, others)
@@ -62,12 +59,12 @@ def main():
     # Data processing
 
     #   Sangmin Lee is in charge
-    preprocessing = Scoring(coverage, user_data, roads, others)
+    # preprocessing = Scoring(coverage, user_data, roads, others)
 
-    #    [if you need]
-    #    //return_values  = preprocessing.function_name(...)
+    # #    [if you need]
+    # #    //return_values  = preprocessing.function_name(...)
 
-    scored_user_data, scored_roads, scored_others = preprocessing.valueScore()
+    # scored_user_data, scored_roads, scored_others = preprocessing.valueScore()
 
     print('main', scored_user_data)
 
