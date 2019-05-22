@@ -21,28 +21,27 @@ def Make_Default_Markers(Map_Object, scored_roads, scored_others, path):
     # eachRoad[0] = coorx
     # eachRoad[1] = coory
 
-    print('roadIcon is loaded from {}'.format(os.path.join(path, 'roadIcon')))
+    print('roadIcon is loaded from {}'.format(os.path.join(os.path.join(path, 'static'), 'roadIcon.png')))
 
     roadIcon = folium.features.CustomIcon(
-        os.path.join(path, 'roadIcon'), icon_size=(28, 30))
+        os.path.join(os.path.join(path, 'static'), 'roadIcon.png'), icon_size=(14, 14))
 
     for eachRoad in scored_roads:
-        folium.Marker([eachRoad[0], eachRoad[1]],
-                      icon=folium.Icon(icon=roadIcon)
-                      ).add_to(MapObject)
+        folium.Marker([eachRoad[0], eachRoad[1]]
+                      ).add_to(Map_Object)
 
     # Mark others marker ::
     # eachObject[0] = coorx,
     # eachObject[1] = coory,
 
     print('othersIcon is loaded from {}'.format(
-        os.path.join(path, 'othersIcon')))
-    othersIcon = folium.features.CustomIcon(url, icon_size=(28, 30))
+        os.path.join(os.path.join(path, 'static'), 'othersIcon.png')))
+
+    othersIcon = folium.features.CustomIcon(os.path.join(os.path.join(path, 'static'), 'othersIcon.png'), icon_size=(14, 14))
 
     for eachObject in scored_others:
-        folium.Marker([eachObject[0], eachObject[1]],
-                      icon=folium.Icon(icon=othersIcon)
-                      ).add_to(MapObject)
+        folium.Marker([eachObject[0], eachObject[1]]
+                      ).add_to(Map_Object)
 
 
 # Load value markers and circlemarker based on user input
@@ -52,7 +51,7 @@ def Make_Default_Markers(Map_Object, scored_roads, scored_others, path):
 def Make_Value_Markers(MapObject, user_data, coverage, path):
 
     userIcon = folium.features.CustomIcon(
-        os.path.join(path, 'vamap_logo'), icon_size=(28, 30))
+        os.path.join(os.path.join(path, 'static'), 'vamap_logo.png'), icon_size=(14, 14))
 
     for data in user_data:
 
@@ -65,8 +64,7 @@ def Make_Value_Markers(MapObject, user_data, coverage, path):
         else:
             color = '#F7BC05'
 
-        folium.Marker(loc,
-                      icon=folium.Icon(icon=userIcon)).add_to(MapObject)
+        folium.Marker(loc).add_to(MapObject)
 
         folium.Circle(
             loc,

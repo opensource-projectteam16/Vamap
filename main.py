@@ -43,11 +43,6 @@ def main():
     coverage, user_data, roads, others = parser(path)
     printparser(coverage, user_data, roads, others)
 
-    # user_data = ['seoulbikeinfo_test.xlsx', 'Excel_Import_1', '위도', '경도']
-    # roads = {'1) 0.3': ['road_test.xlsx', 'road_2', 'x', 'y',
-    #                     'start_x', 'start_y', 'end_x', 'end_y', 'value', 4]}
-    # others = {'1) 0.2': ['seoul_building_1_test.xlsx', 'building_2', 'x', 'y', 'value', 3], '2) 0.5': [
-    #     'seoul_building_1_test.xlsx', 'building_3', 'x', 'y', 'value', 4]}
 
     # TODO Check error handling is working well.
 
@@ -60,35 +55,37 @@ def main():
     # Data processing
 
     #   Sangmin Lee is in charge
-    # preprocessing = Scoring(coverage, user_data, roads, others)
+    preprocessing = Scoring(coverage, user_data, roads, others)
 
     # #    [if you need]
     # #    //return_values  = preprocessing.function_name(...)
 
-    # scored_user_data, scored_roads, scored_others = preprocessing.valueScore()
+    scored_user_data, scored_roads, scored_others = preprocessing.valueScore()
 
-    #print('main', scored_user_data)
 
+    print('scored_user' , scored_user_data)
+    print('scored_roads', scored_roads)
+    print('scored_others', scored_others)
     # Global tooltip
     tooltip = 'Click For More Info'
 
     # Load custom marker icon
 
     # Load default markers (roads, buildings, subways)
-    #Make_Default_Markers(Map_Object, scored_roads, scored_others, path)
+    Make_Default_Markers(Map_Object, scored_roads, scored_others, path)
 
     # Load value markers and circlemarker based on user input
     # (calculated by 'scoring')
-    #Make_Value_Markers(Map_Object, scored_user_data, coverage, path)
+    Make_Value_Markers(Map_Object, scored_user_data, coverage, path)
 
     # Add choropleth
     # Map_Object.choropleth(
 
     # )
 
-    # Save as html file
+    #Save as html file
 
-    # Map_Object.save('MAP.html')
+    Map_Object.save('MAP.html')
 
 
 if __name__ == "__main__":

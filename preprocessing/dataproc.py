@@ -84,17 +84,15 @@ class dataproc:
 
     def changedtype(self,mode):
         if mode==0:
-            print('hi')
             for index in range(0,len(self.maindata)+1):
-                print('hi1')
                 if index==0:
                     self.maindata[0][index].dtype.names=('x',)
                 elif index==1:
                     self.maindata[0][index].dtype.names=('y',)
                 elif index==2:
                     self.maindata[0][index].dtype.names=('value',)
-                else:
-                    self.maindata[0][index].dtype.names=('string',)
+#                else:
+#                   self.maindata[0][index].dtype.names=('string',)
         if mode==1:
             for index in range(0,len(self.maindata[0])):
                 if index==0:
@@ -112,7 +110,8 @@ class dataproc:
                 elif index==6:
                     self.maindata[0][index].dtype.names=('value',)
                 else:
-                    self.maindata[0][index].dtype.names=('string',)
+                    pass
+#                    self.maindata[0][index].dtype.names=('string',)
         if mode==2:
             for datalist in self.maindata:
                 for index in zip(datalist,range(0,len(datalist)+1)):
@@ -123,8 +122,9 @@ class dataproc:
                     elif index==2:
                         datalist[0][index].dtype.names=('value',)
                     else:
-                        datalist[0][index].dtype.names=('string',)
-                
+                        pass
+#                        datalist[0][index].dtype.names=('string',)
+
     def changecolumnname(self,columnname):
         if len(columnname):
             pass
@@ -166,7 +166,6 @@ class excelmanager:
                 print("loaded "+str(afile))
                 for sheet in load_exs: #several sheets
                     if sheet.title==basedata[1]:
-                        print('163',sheet.title,datalist)
                         self.resultlist.append(self.extractdata(sheet,datalist))
                         self.datalabel.append(sheet.title)            
     

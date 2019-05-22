@@ -79,14 +79,14 @@ class Scoring:
                 va = va[0]
                 for i, j, k in zip(sx, sy, va):
                     pre = pre[0]
-                    result.append([float(i[0][0]), float(j[0][0]), 1.0])
+                    result.append([float(i[0][0]), float(j[0][0]), Weight[i]])
             if mode == 1:
                 st_x = st_x[0]
                 st_y = st_y[0]
                 ed_x = ed_x[0]
                 ed_y = ed_y[0]
                 for i, j, k, l, m, n in zip(sx, sy, st_x, st_y, ed_x, ed_y):
-                    result.append([float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),1.0])
+                    result.append([float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),Weight[i]])
 
         return result
 
