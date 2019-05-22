@@ -2,6 +2,10 @@
   <img width="500" height="300" src="./static/readme_logo.png">
 </p>
 
+| **`LICENSE`** | **`Watch`** | **`Size`** |**`Download`**|**`Issues`**|**`Pull Request`**|
+|-----------------|-----------------|-----------------|-----------------|-----------------|-----------------|
+|![GitHub](https://img.shields.io/github/license/opensource-projectteam16/Vamap.svg) |![GitHub](https://img.shields.io/github/watchers/opensource-projectteam16/Vamap.svg?label=Watch&style=social)|![GitHub](https://img.shields.io/github/repo-size/opensource-projectteam16/Vamap.svg)|![GitHub](https://img.shields.io/github/downloads/opensource-projectteam16/Vamap/total.svg)|![GitHub](https://img.shields.io/github/issues/opensource-projectteam16/Vamap.svg)|![GitHub](https://img.shields.io/github/issues-pr/opensource-projectteam16/Vamap.svg)
+
 
 # VAMAP
 
@@ -12,7 +16,7 @@ A SIMPLE USER DATA-DRIVEN MAP-ANALYZING TOOL BASED ON FOLIUM
 Python 3.7+ , folium 0.8.3
 
 ```
-pip install folium
+$ pip install folium
 ```
 
 ### Installing
@@ -20,16 +24,15 @@ pip install folium
 1. Cloning our repo
 
 ```
-git clone https://github.com/opensource-projectteam16/Team16_Development.git
+$ git clone https://github.com/opensource-projectteam16/Team16_Development.git
 ```
 
 2. Change addresses written in your excel file to location values through commands below
-
-```
-python roadmanager.py <your_roadfile.xlsx> <sheet_name> <column_name> 
-```
 this will return a pair of new columns that are ***<column_name>_x***  and ***<column_name>_y*** which refer latitude, longitude.
 
+```
+$ python roadmanager.py <your_roadfile.xlsx> <sheet_name> <column_name> 
+```
 
 3. Set up your input variables and Run main
 
@@ -37,7 +40,7 @@ Write setup.txt according to setup rules (you can check them in the file)
 then execute command line below
 
 ```
-python main.py setup.txt
+$ python main.py setup.txt
 ```
 
 4. Then you will get ***MAP.html*** which shows you **2 different markers**, which are **roads and others**, and **one marker evaluated by surrounded objects that are in the given coverage** 
@@ -51,10 +54,6 @@ Add additional notes about how to deploy this on a live system
 
 Please read [CONTRIBUTING.md](https://github.com/opensource-projectteam16/Vamap/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/opensource-projectteam16/Vamap/blob/master/tags). 
-
 ## Authors
 
 * **HYUNJAE LEE** - *Team leader* - [hyunjae-lee](https://github.com/hyunjae-lee)
@@ -62,7 +61,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **SANGMIN LEE** - *Developer* - [sangminBangbada](https://github.com/sangminBangbada)
 * **SEOKCHEON JU** - *Developer* - [smallfish06](https://github.com/smallfish06)
 
-See also the list of [contributors](https://github.com/opensource-projectteam16/Vamap/blob/master/Contributors.md) who participated in this project.
+See also the list of [contributors](https://github.com/opensource-projectteam16/Vamap/blob/master/Contributor.md) who participated in this project.
 
 ## License
 
