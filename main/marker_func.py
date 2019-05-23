@@ -1,12 +1,14 @@
 import folium
 import os
+# import base64
+# from io import BytesIO
 
 # Hyunjae Lee is in charge
 
-''' 
+'''
 <How to work>
 
-<Usage> 
+<Usage>
  Input example  :
  Output example :
 
@@ -21,27 +23,35 @@ def Make_Default_Markers(Map_Object, scored_roads, scored_others, path):
     # eachRoad[0] = coorx
     # eachRoad[1] = coory
 
-    print('roadIcon is loaded from {}'.format(os.path.join(os.path.join(path, 'static'), 'roadIcon.png')))
+    # print('roadIcon is loaded from {}'.format(
+    #     os.path.join(os.path.join(path, 'static'), 'roadIcon.png')))
 
-    roadIcon = folium.features.CustomIcon(
-        os.path.join(os.path.join(path, 'static'), 'roadIcon.png'), icon_size=(14, 14))
+    # road_encoded = base64.b64encode(
+    #     open(os.path.join(os.path.join(path, 'static'), 'roadIcon.png'), 'rb').read())
+    # road_decoded = base64.b64decode(road_encoded)
+    # road_icon_url = BytesIO(road_decoded)
+    # roadIcon = folium.features.CustomIcon(road_icon_url, icon_size=(14, 14))
 
     for eachRoad in scored_roads:
-        folium.Marker([eachRoad[0], eachRoad[1]]
+        folium.Marker(location=eachRoad, icon=folium.Icon(color='green')
                       ).add_to(Map_Object)
 
     # Mark others marker ::
     # eachObject[0] = coorx,
     # eachObject[1] = coory,
 
-    print('othersIcon is loaded from {}'.format(
-        os.path.join(os.path.join(path, 'static'), 'othersIcon.png')))
+    # print('othersIcon is loaded from {}'.format(
+    #     os.path.join(os.path.join(path, 'static'), 'othersIcon.png')))
 
-    othersIcon = folium.features.CustomIcon(os.path.join(os.path.join(path, 'static'), 'othersIcon.png'), icon_size=(14, 14))
+    # other_encoded = base64.b64encode(
+    #     open(os.path.join(os.path.join(path, 'static'), 'othersIcon.png'), 'rb').read())
+    # other_decoded = base64.b64decode(other_encoded)
+    # other_icon_url = BytesIO(other_decoded)
+    # othersIcon = folium.features.CustomIcon(other_icon_url, icon_size=(14, 14))
 
     for eachObject in scored_others:
-        folium.Marker([eachObject[0], eachObject[1]]
-                      ).add_to(Map_Object)
+        folium.Marker(location=eachObject,
+                      icon=folium.Icon(color='blue')).add_to(Map_Object)
 
 
 # Load value markers and circlemarker based on user input
@@ -50,8 +60,8 @@ def Make_Default_Markers(Map_Object, scored_roads, scored_others, path):
 
 def Make_Value_Markers(MapObject, user_data, coverage, path):
 
-    userIcon = folium.features.CustomIcon(
-        os.path.join(os.path.join(path, 'static'), 'vamap_logo.png'), icon_size=(14, 14))
+    # userIcon = folium.features.CustomIcon(
+    #     os.path.join(os.path.join(path, 'static'), 'vamap_logo.png'), icon_size=(14, 14))
 
     for data in user_data:
 
@@ -64,7 +74,8 @@ def Make_Value_Markers(MapObject, user_data, coverage, path):
         else:
             color = '#F7BC05'
 
-        folium.Marker(loc).add_to(MapObject)
+        folium.Marker(location=loc, tooltip=str(data[2]), icon=folium.Icon(
+            color='red')).add_to(MapObject)
 
         folium.Circle(
             loc,
