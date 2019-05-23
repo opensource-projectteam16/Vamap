@@ -62,10 +62,6 @@ def main():
 
     scored_user_data, scored_roads, scored_others = preprocessing.valueScore()
 
-
-    print('scored_user' , scored_user_data)
-    print('scored_roads', scored_roads)
-    print('scored_others', scored_others)
     # Global tooltip
     tooltip = 'Click For More Info'
 

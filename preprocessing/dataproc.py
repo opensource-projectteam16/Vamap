@@ -145,7 +145,7 @@ class excelmanager:
     def __init__(self,datafile,basedata,mode): 
         self.resultlist=[]
         self.datalabel=[]
-        print(datafile,basedata)
+        print("\n", datafile,basedata)
         if mode==2:
             for afile,datacolumn in zip(datafile,basedata):
                 datalist=datacolumn[2:]

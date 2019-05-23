@@ -1,5 +1,5 @@
 # Coverage : this is absolute meter-wise distance centered on each user data, which will include all possible value objects. (50 ~ 1000m)
-300
+500
 
 # User data file, sheet name, latitude, longitude
 seoulbikeinfo_test.xlsx, Excel_Import_1, 위도, 경도

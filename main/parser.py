@@ -67,7 +67,8 @@ def parser(path):
 
         if value_num < 1:
             flag = False
-            print("Number of value files must be at least 1.")
+            print("Number of value files must be"
+                  " at least 1.")
 
         if road_num > value_num:
             flag = False

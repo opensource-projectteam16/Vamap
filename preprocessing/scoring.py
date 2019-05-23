@@ -25,12 +25,6 @@ from math import radians, cos, sin, asin, sqrt
                 Pack : values() of Set
 
 '''
-'''
-시나리오
-'''
-
-
-
 class Scoring:
     def __init__(self, coverage, userSet, roadsSet, othersSet):
         self.coverage = coverage
@@ -41,9 +35,9 @@ class Scoring:
     # 2개 들어갈때 Weight 조정하기
     def packingList(self, predata, Weight, mode):
         result = []
-        for i in range(0, len(predata)):
+        for x in range(0, len(predata)):
             data = []
-            pre = predata[i]
+            pre = predata[x]
             pre = pre[0]
 
             setindex = []
@@ -79,14 +73,14 @@ class Scoring:
                 va = va[0]
                 for i, j, k in zip(sx, sy, va):
                     pre = pre[0]
-                    result.append([float(i[0][0]), float(j[0][0]), Weight[i]])
+                    result.append([float(i[0][0]), float(j[0][0]), Weight[x]])
             if mode == 1:
                 st_x = st_x[0]
                 st_y = st_y[0]
                 ed_x = ed_x[0]
                 ed_y = ed_y[0]
                 for i, j, k, l, m, n in zip(sx, sy, st_x, st_y, ed_x, ed_y):
-                    result.append([float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),Weight[i]])
+                    result.append([float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),Weight[x]])
 
         return result
 
@@ -137,7 +131,7 @@ class Scoring:
             a = i[2:]
             a = float(a)
             otherWeight.append(a)
-        x=[]
+
         k=0
         if self.roadsSet != {}:
             for i in zip(self.roadsSet.values()):
@@ -149,6 +143,7 @@ class Scoring:
                 othersSetting.append([a])
         mode = 0
 
+        print("\n===============Load Excel====================================================================================================================================================\n")
         if userSetting != []:
             allU = dataproc(userSetting, mode=0)
             labelU = allU.getdatalabel()
@@ -176,6 +171,7 @@ class Scoring:
                 for j in range(0, len(labelO)):
                     othersPack.append(allO.getdata())
             opack.append(self.packingList(othersPack, otherWeight, 0))
+        print("\n====================================================================================================================================================================================================\n")
 
         return userPack, rpack, opack
     '''
@@ -335,7 +331,6 @@ class Scoring:
         for i in range(0, len(others_data)):
             del others_data[i][2]
 
-        print(len(resultUser))
         print('\n===============Scored UserData=======================================================================================================================================\n')
         print("[Latitude,  Longitude,  Value  ]")
         for i in range(0, len(resultUser)):
