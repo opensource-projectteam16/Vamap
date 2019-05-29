@@ -63,6 +63,12 @@ Please read [CONTRIBUTING.md](https://github.com/opensource-projectteam16/Vamap/
 
 See also the list of [contributors](https://github.com/opensource-projectteam16/Vamap/blob/master/Contributor.md) who participated in this project.
 
+## How to open an issue
+If you have found any issue from our project, Please check our issue template and open yours.
+
+## How to send a pull request
+If you have accepted an issue, then you can send us a pull request. Please check our pull request template before you send it.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/opensource-projectteam16/Vamap/blob/master/LICENSE.md) file for details
