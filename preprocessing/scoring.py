@@ -69,7 +69,7 @@ class Scoring:
             sy = sy[0]
             if mode == 0:
                 for i, j in zip(sx, sy):
-                    result.append([float(i[0][0]), float(j[0][0]), float(Weight[x])])
+                    result.append([float(i[0][0]), float(j[0][0]), float(self.userSet[4])])
             if mode == 2 :
                 va = va[0]
                 for i, j in zip(sx, sy):
@@ -119,7 +119,7 @@ class Scoring:
         preotherW = list(self.othersSet.keys())
         roadWeight = []
         otherWeight = []
-        uservalue = [float(-1)]
+        uservalue = []
 
         rpack =[]
         opack = []
