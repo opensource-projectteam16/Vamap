@@ -7,11 +7,11 @@ assignees: ''
 
 ---
 
-@ Pull request 보내기 전에 반드시 Issue를 아래의 템플릿으로 작성하여 주세요. 
+@ ```Pull request``` 보내기 전에 반드시 ```Issue```를 아래의 템플릿으로 작성하여 주세요. 
 
-@ 해당 Issue 를 저희 팀에서 검토하고, 해결이 필요한 Issue일 경우 Pull request 요청을 드릴게요.
+@ 해당 ```Issue``` 를 저희 팀에서 검토하고, 해결이 필요한 ```Issue```일 경우 ```Pull request``` 요청을 드릴게요.
 
-@ Pull request 를 진행하실 때는, 본인이 개발할 기능의 이름이나 Github 이름 등 식별가능한 이름의 브랜치를 생성하시고, 해당 브랜치에서 작업을 진행해주세요.
+@ ```Pull request``` 를 진행하실 때는, 본 프로젝트의 ```contribute``` 브랜치에 요청해주세요.
 
 1. 이슈 제목
 
