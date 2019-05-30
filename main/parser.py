@@ -28,14 +28,21 @@ def parser(path):
         value_num = int(array[2])
         road_num = int(array[3])
 
-        userdata_list = [0 for x in range(4)]
-        for i in range(4):
+        userdata_list = [0 for x in range(5)]
+        for i in range(5):
             userdata_list[i] = array[1].split(',')[i].strip()
 
-        # Rule of User data form
-        if not len(userdata_list[2:]) == 2:
+        userdata_list[4] = float(userdata_list[4])
+        if not -1 <= userdata_list[4] <= 1:
             flag = False
-            print("Userdata must include filename, sheetname, latitude, longitude")
+            print("Userdata's weight must be in -1.0 ~ 1.0")
+
+
+
+        # Rule of User data form
+        if not len(userdata_list[2:]) == 3:
+            flag = False
+            print("Userdata must include filename, sheetname, latitude, longitude, value")
 
         # Number of weights must be same as Number of values
         weight_list = [0 for x in range(value_num)]
@@ -53,7 +60,7 @@ def parser(path):
 
         # Test User data's validation
         managed_userdata_list = [0 for x in range(len(userdata_list[2:]))]
-        for i in range(len(userdata_list[2:])):
+        for i in range(len(userdata_list[2:4])):
             managed_userdata_list[i] = returnColumn(
                 path + user_path + userdata_list[0], userdata_list[1], userdata_list[2+i])
 
@@ -125,7 +132,7 @@ def parser(path):
                         flag = False
                         print("value-weight must be in -10 ~ 10")
 
-                #returnColumn(path + file_path + road_list[i][0], road_list[i][1].strip(), road_list[i][2].strip())
+                returnColumn(path + file_path + road_list[i][0], road_list[i][1].strip(), road_list[i][2].strip())
 
             # save as dict
             for i in range(value_num - road_num):
@@ -145,7 +152,7 @@ def parser(path):
                         flag = False
                         print("value-weight must be in -10 ~ 10")
 
-                #returnColumn(path + file_path + other_list[i][0], other_list[i][1].strip(), other_list[i][2].strip())
+                returnColumn(path + file_path + other_list[i][0], other_list[i][1].strip(), other_list[i][2].strip())
 
         if flag:
             return fined_coverage, userdata_list, roads, others
@@ -173,12 +180,10 @@ def strToint(str):
     float_str = float(str.split(')')[1].strip())
     return float_str
 
-def printparser(coverage, user_data, roads, others):
+def printparser(coverage, userdata_list, roads, others):
     print("\n===============Read Setup.txt=================================================================================================================================================\n")
     print("[Coverage] : ", coverage)
-    print("\n[User data] : ", user_data)
+    print("\n[User data] : ", userdata_list)
     print("\n[Roads files & Weights] : ", roads)
     print("\n[Other files & Weights] : ", others)
-    print("\n=================================================================================================================================================================================\n")
-
-    return
+    print("\n===============================================================================================================================================================================\n")

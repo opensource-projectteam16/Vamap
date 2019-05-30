@@ -1,13 +1,13 @@
 # Coverage : this is absolute meter-wise distance centered on each user data, which will include all possible value objects. (50 ~ 1000m)
 500
 
-# User data file, sheet name, latitude, longitude
-seoulbikeinfo_test.xlsx, Excel_Import_1, 위도, 경도
+# User data file, sheet name, latitude, longitude, weight(-1.0 ~ 1.0)
+seoulbikeinfo_test.xlsx, Excel_Import_1, 위도, 경도, -0.4
 
 # The number of value files (this must be at least 1)
 4
 
-# The number of road files
+# The number of road file
 2
 
 # Weights (number of value files = number of weights)
