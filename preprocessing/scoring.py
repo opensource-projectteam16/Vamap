@@ -35,10 +35,11 @@ class Scoring:
     # 2개 들어갈때 Weight 조정하기
     def packingList(self, predata, Weight, mode):
         result = []
-        for x in range(0, len(predata)):
+        for x in range(0, len(Weight)):
             data = []
             pre = predata[x]
             pre = pre[0]
+            userWeight = 0-1
 
             setindex = []
             sx = []
@@ -68,19 +69,20 @@ class Scoring:
             sy = sy[0]
             if mode == 0:
                 for i, j in zip(sx, sy):
-                    result.append([float(i[0][0]), float(j[0][0]), 1.0])
+                    result.append([float(i[0][0]), float(j[0][0]), float(Weight[x])])
             if mode == 2 :
                 va = va[0]
-                for i, j, k in zip(sx, sy, va):
+                for i, j in zip(sx, sy):
                     pre = pre[0]
-                    result.append([float(i[0][0]), float(j[0][0]), Weight[x]])
+                    result.append([float(i[0][0]), float(j[0][0]), float(Weight[x])])
+
             if mode == 1:
                 st_x = st_x[0]
                 st_y = st_y[0]
                 ed_x = ed_x[0]
                 ed_y = ed_y[0]
                 for i, j, k, l, m, n in zip(sx, sy, st_x, st_y, ed_x, ed_y):
-                    result.append([float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),Weight[x]])
+                    result.append([float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),float(Weight[x])])
 
         return result
 
@@ -117,7 +119,7 @@ class Scoring:
         preotherW = list(self.othersSet.keys())
         roadWeight = []
         otherWeight = []
-        uservalue = []
+        uservalue = [float(-1)]
 
         rpack =[]
         opack = []
@@ -128,9 +130,9 @@ class Scoring:
             a = float(a)
             roadWeight.append(a)
         for i in preotherW:
-            a = i[2:]
-            a = float(a)
-            otherWeight.append(a)
+            b = i[2:]
+            b = float(b)
+            otherWeight.append(b)
 
         k=0
         if self.roadsSet != {}:
@@ -170,7 +172,7 @@ class Scoring:
                 labelO = allO.getdatalabel()
                 for j in range(0, len(labelO)):
                     othersPack.append(allO.getdata())
-            opack.append(self.packingList(othersPack, otherWeight, 0))
+            opack.append(self.packingList(othersPack, otherWeight, 2))
         print("\n====================================================================================================================================================================================================\n")
 
         return userPack, rpack, opack
@@ -187,11 +189,11 @@ class Scoring:
     # newCoverage -> inCoverage -> converDis -> cal
 
     def newCoverage(self, userone):
-        x1 = userone[0] - self.coverage / 133330
-        y1 = userone[1] + self.coverage / (133330 * cos(userone[0]))
+        x1 = userone[0] - self.coverage / 135000
+        y1 = userone[1] + self.coverage / (135000 * cos(userone[0]))
         upPoint = [x1, y1]
-        x2 = userone[0] + self.coverage / 133330
-        y2 = userone[1] - self.coverage / (133330 * cos(userone[0]))
+        x2 = userone[0] + self.coverage / 135000
+        y2 = userone[1] - self.coverage / (135000 * cos(userone[0]))
         downPoint = [x2, y2]
 
         return upPoint, downPoint
@@ -201,18 +203,19 @@ class Scoring:
 
         incover = []
         for i in range(0, len(data)):
-            if data[i][0] > upPoint[0] and data[i][0] < downPoint[0]:
+            if (data[i][0] > upPoint[0]) and (data[i][0] < downPoint[0]):
                 incover.append(data[i])
-            elif data[i][0] > downPoint[0]:
-                break;
+            else :
+                pass
 
         x = []
         for i in range(0, len(incover)):
-            if incover[i][1] > upPoint[1] or incover[i][1] < downPoint[1]:
+            if (incover[i][1] > upPoint[1]) or (incover[i][1] < downPoint[1]):
                 x.append(incover[i])
         for i in x:
             incover.remove(i)
 
+        print('217', incover)
         return incover
 
     #    roadsSet = {0.5 : [x,y,start,end], 가중치 :  [csv,sheet2,x,y,st,fn]}
@@ -223,19 +226,21 @@ class Scoring:
         incover = []
         for i in range(0, len(data)):
             if (data[i][0] > upPoint[0] and data[i][0] < downPoint[0]) \
-                    or (data[i][2][0] > upPoint[0] and data[i][2][0] < downPoint[0]) \
-                    or (data[i][3][0] > upPoint[0] and data[i][3][0] < downPoint[0]):
+                    or (data[i][2] > upPoint[0] and data[i][2] < downPoint[0]) \
+                    or (data[i][4] > upPoint[0] and data[i][4] < downPoint[0]):
                 incover.append(data[i])
+            else : pass;
 
         x = []
         for i in range(0, len(incover)):
-            if incover[i][1] > upPoint[1] or incover[i][1] < downPoint[1] \
-                    or (incover[i][2][1] > upPoint[1] and incover[i][2][1] < downPoint[0]) \
-                    or (incover[i][3][1] > upPoint[1] and incover[i][3][1] < downPoint[0]):
+            if (incover[i][1] > upPoint[1] or incover[i][1] < downPoint[1]) \
+                    or (incover[i][3] > upPoint[1] and incover[i][3] < downPoint[0]) \
+                    or (incover[i][5] > upPoint[1] and incover[i][5] < downPoint[0]):
                 x.append(incover[i])
         for i in x:
             incover.remove(i)
 
+        print('240', incover)
         return incover
 
     def convertDis(self, userdata, data):
@@ -265,7 +270,11 @@ class Scoring:
         data = self.inCoverage(user, data)
 
         pre = self.convertDis(user, data)
-
+        '''
+        print('270', pre)
+        if pre != [] :
+            print('271',data[0][2])
+        '''
         for i in range(0, len(pre)):
             x = data[i][2] * (pre[i] / coverage)
             sum += x
@@ -280,10 +289,12 @@ class Scoring:
         middle = []
         start = []
         end = []
-        for i in range(0, len(data)):
-            middle.append([data[i][0], data[i][1]])
-            start.append([data[i][2],data[i][3]])
-            end.append([data[i][4],data[i][5]])
+        dataR = self.inCoverageR(user, data)
+
+        for i in range(0, len(dataR)):
+            middle.append([dataR[i][0], dataR[i][1]])
+            start.append([dataR[i][2],dataR[i][3]])
+            end.append([dataR[i][4],dataR[i][5]])
 
         middleD = self.convertDis(user, middle)
         startD = self.convertDis(user, start)
@@ -291,11 +302,12 @@ class Scoring:
 
         distantList = []
         pre = []
-        for i in range(0, len(data)):
+        for i in range(0, len(dataR)):
             pre.append([middleD[i], startD[i], endD[i]])
             pre[i].sort()
             distantList.append([pre[i][0], data[i][6]])
 
+#        print('302', distantList)
         for i in range(0,len(distantList)):
             x = data[i][6] * (distantList[i][0] / coverage)
             sum += x
@@ -303,14 +315,11 @@ class Scoring:
 
         return sum
 
+
     def valueScore(self):
         user_data, roads_data, others_data = self.callObj()
-#        print('351',user_data)
-#        print('352',roads_data)
-#        print('353',others_data)
         roads_data = roads_data[0]
         others_data = others_data[0]
-
 
         resultUser = user_data
         count = 0
@@ -321,6 +330,7 @@ class Scoring:
             z = self.cal_(user, user_data, self.coverage)
 
             resultUser[count][2] = x + z + y
+
             count += 1
 
         roads = []
