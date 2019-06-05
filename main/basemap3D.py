@@ -1,18 +1,60 @@
 from mpl_toolkits.basemap import Basemap
+from matplotlib.collections import PolyCollection
 from matplotlib import style
+
 import matplotlib.pyplot as plt
 import numpy as np
 
 ''' This class is to draw 3D map using Basemap '''
+# reference : https://buildmedia.readthedocs.org/media/pdf/basemaptutorial/latest/basemaptutorial.pdf
+
+'''
+class mpl_toolkits.basemap.Basemap
+(llcrnrlon=None, llcrnrlat=None, urcrnrlon=None, urcrnrlat=None, llcrnrx=None, 
+llcrnry=None, urcrnrx=None, urcrnry=None, width=None, height=None, projection='cyl', 
+resolution='c', area_thresh=None, rsphere=6370997.0, ellps=None, 
+lat_ts=None, lat_1=None, lat_2=None, lat_0=None, lon_0=None, lon_1=None, lon_2=None, 
+o_lon_p=None, o_lat_p=None, k_0=None, no_rot=False, suppress_ticks=True, satellite_height=35786000, 
+boundinglat=None, fix_aspect=True, anchor='C', celestial=False, round=False, epsg=None, ax=None)
+'''
 
 
 class Map3D:
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, userdata):
+        self.userdata = np.array(userdata)
 
-    def draw3dMap():
-        pass
+    def draw3dMap(self):
+        map = Basemap(llcrnrlon=-20, llcrnrlat=0, urcrnrlon=15, urcrnrlat=50,)
 
-    def show3Dmap():
-        pass
+        fig = plt.figure()
+        ax = Axes3D(fig)
+
+        ax.set_axis_off()
+        ax.azim = 270
+        ax.dist = 7
+
+        polys = []
+        for polygon in map.landpolygons:
+            polys.append(polygon.get_coords())
+
+        lc = PolyCollection(polys, edgecolor='black',
+                            facecolor='#DDDDDD', closed=False)
+
+        ax.add_collection3d(lc)
+        ax.add_collection3d(map.drawcoastlines(linewidth=0.25))
+        ax.add_collection3d(map.drawcountries(linewidth=0.35))
+
+        lons = np.array([-13.7, -10.8, -13.2, -96.8, -7.99, 7.5, -17.3, -3.7])
+        lats = np.array([9.6, 6.3, 8.5, 32.7, 12.5, 8.9, 14.7, 40.39])
+        cases = np.array([1971, 7069, 6073, 4, 6, 20, 1, 1])
+        deaths = np.array([1192, 2964, 1250, 1, 5, 8, 0, 0])
+        places = np.array(['Guinea', 'Liberia', 'Sierra Leone',
+                           'United States', 'Mali', 'Nigeria', 'Senegal', 'Spain'])
+
+        x, y = map(lons, lats)
+
+        ax.bar3d(x, y, np.zeros(len(x)), 2, 2, deaths, color='r', alpha=0.8)
+
+    def show3Dmap(self):
+        plt.show()
