@@ -1,20 +1,22 @@
+
 from mpl_toolkits.basemap import Basemap
 from matplotlib.collections import PolyCollection
+from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import axes3d
 from matplotlib import style
 
 import matplotlib.pyplot as plt
 import numpy as np
-
 ''' This class is to draw 3D map using Basemap '''
 # reference : https://buildmedia.readthedocs.org/media/pdf/basemaptutorial/latest/basemaptutorial.pdf
 
 '''
 class mpl_toolkits.basemap.Basemap
-(llcrnrlon=None, llcrnrlat=None, urcrnrlon=None, urcrnrlat=None, llcrnrx=None, 
-llcrnry=None, urcrnrx=None, urcrnry=None, width=None, height=None, projection='cyl', 
-resolution='c', area_thresh=None, rsphere=6370997.0, ellps=None, 
-lat_ts=None, lat_1=None, lat_2=None, lat_0=None, lon_0=None, lon_1=None, lon_2=None, 
-o_lon_p=None, o_lat_p=None, k_0=None, no_rot=False, suppress_ticks=True, satellite_height=35786000, 
+(llcrnrlon=None, llcrnrlat=None, urcrnrlon=None, urcrnrlat=None, llcrnrx=None,
+llcrnry=None, urcrnrx=None, urcrnry=None, width=None, height=None, projection='cyl',
+resolution='c', area_thresh=None, rsphere=6370997.0, ellps=None,
+lat_ts=None, lat_1=None, lat_2=None, lat_0=None, lon_0=None, lon_1=None, lon_2=None,
+o_lon_p=None, o_lat_p=None, k_0=None, no_rot=False, suppress_ticks=True, satellite_height=35786000,
 boundinglat=None, fix_aspect=True, anchor='C', celestial=False, round=False, epsg=None, ax=None)
 '''
 
@@ -22,15 +24,31 @@ boundinglat=None, fix_aspect=True, anchor='C', celestial=False, round=False, eps
 class Map3D:
 
     def __init__(self, userdata):
-        self.userdata = np.array(userdata)
+
+        style.use('fivethirtyeight')
+        self.userdata = userdata
 
     def draw3dMap(self):
-        map = Basemap(llcrnrlon=-20, llcrnrlat=0, urcrnrlon=15, urcrnrlat=50,)
+
+        map = Basemap(projection='gall',
+
+                      llcrnrlon=124.5,            # left longitude
+
+                      urcrnrlon=129.7,            # right longitude
+
+                      urcrnrlat=38.7,              # upper latitude
+
+                      llcrnrlat=33.1,                # lower latitude
+
+                      resolution='i',
+
+                      area_thresh=200
+                      )
 
         fig = plt.figure()
         ax = Axes3D(fig)
-
-        ax.set_axis_off()
+        print(self.userdata)
+        ax.set_axis_on()
         ax.azim = 270
         ax.dist = 7
 
@@ -45,16 +63,29 @@ class Map3D:
         ax.add_collection3d(map.drawcoastlines(linewidth=0.25))
         ax.add_collection3d(map.drawcountries(linewidth=0.35))
 
-        lons = np.array([-13.7, -10.8, -13.2, -96.8, -7.99, 7.5, -17.3, -3.7])
-        lats = np.array([9.6, 6.3, 8.5, 32.7, 12.5, 8.9, 14.7, 40.39])
-        cases = np.array([1971, 7069, 6073, 4, 6, 20, 1, 1])
-        deaths = np.array([1192, 2964, 1250, 1, 5, 8, 0, 0])
-        places = np.array(['Guinea', 'Liberia', 'Sierra Leone',
-                           'United States', 'Mali', 'Nigeria', 'Senegal', 'Spain'])
+        lons = list()
+        lats = list()
+        values = list()
+
+        for eachUserdata in self.userdata:
+            lons.append(eachUserdata[0])
+            lats.append(eachUserdata[1])
+            values.append(eachUserdata[2])
+
+        lons = np.array(lons)
+        print(lons)
+        lats = np.array(lats)
+        print(lats)
+        values = np.array(values)
 
         x, y = map(lons, lats)
 
-        ax.bar3d(x, y, np.zeros(len(x)), 2, 2, deaths, color='r', alpha=0.8)
+        ax.set_xlabel('Latitude')
+        ax.set_ylabel('Longitude')
+        ax.set_zlabel('Value')
+
+        ax.bar3d(x, y, values,
+                 2, 2, 2, color='r', alpha=0.8)
 
     def show3Dmap(self):
         plt.show()
