@@ -27,30 +27,34 @@ class Map3D:
 
         style.use('fivethirtyeight')
         self.userdata = userdata
+        self.extent = [124.5, 129.7, 38.7, 33.1]
 
     def draw3dMap(self):
 
-        map = Basemap(projection='gall',
+        fig = plt.figure()
+        # ax = Axes3D(fig)
+        ax = fig.gca(projection='3d')
 
-                      llcrnrlon=124.5,            # left longitude
+        map = Basemap(projection='cyl',  # 'gall',
 
-                      urcrnrlon=129.7,            # right longitude
+                      llcrnrlon=self.extent[0],            # left longitude
 
-                      urcrnrlat=38.7,              # upper latitude
+                      urcrnrlon=self.extent[1],            # right longitude
 
-                      llcrnrlat=33.1,                # lower latitude
+                      urcrnrlat=self.extent[2],              # upper latitude
 
-                      resolution='i',
+                      llcrnrlat=self.extent[3],                # lower latitude
 
-                      area_thresh=200
+                      resolution='l',
+
+                      area_thresh=200,
+
+                      fix_aspect=False,
+
+                      ax=ax
                       )
 
-        fig = plt.figure()
-        ax = Axes3D(fig)
-        print(self.userdata)
-        ax.set_axis_on()
-        ax.azim = 270
-        ax.dist = 7
+        # Arrange polygons
 
         polys = []
         for polygon in map.landpolygons:
@@ -59,9 +63,7 @@ class Map3D:
         lc = PolyCollection(polys, edgecolor='black',
                             facecolor='#DDDDDD', closed=False)
 
-        ax.add_collection3d(lc)
-        ax.add_collection3d(map.drawcoastlines(linewidth=0.25))
-        ax.add_collection3d(map.drawcountries(linewidth=0.35))
+        # Data handling
 
         lons = list()
         lats = list()
@@ -73,19 +75,44 @@ class Map3D:
             values.append(eachUserdata[2])
 
         lons = np.array(lons)
-        print(lons)
         lats = np.array(lats)
-        print(lats)
         values = np.array(values)
 
-        x, y = map(lons, lats)
+        print(lons, lats, values)
 
-        ax.set_xlabel('Latitude')
-        ax.set_ylabel('Longitude')
-        ax.set_zlabel('Value')
+        # axis setup
 
-        ax.bar3d(x, y, values,
-                 2, 2, 2, color='r', alpha=0.8)
+        ax.set_axis_on()
+        ax.azim = 270
+        ax.dist = 7
+        ax.add_collection3d(lc)
+        ax.add_collection3d(map.drawcoastlines(linewidth=0.25))
+        ax.add_collection3d(map.drawcountries(linewidth=0.35))
 
-    def show3Dmap(self):
+        ax.view_init(azim=230, elev=50)
+        ax.set_xlabel('Longitude (°E)', labelpad=20)
+        ax.set_ylabel('Latitude (°N)', labelpad=20)
+        ax.set_zlabel('Altitude (km)', labelpad=20)
+
+        ax.set_yticks(parallels)
+        ax.set_yticklabels(parallels)
+        ax.set_xticks(meridians)
+        ax.set_xticklabels(meridians)
+        ax.set_zlim(0., 1000.)
+
+        # TODO NEED TO TEST
+        # scatter map based on lons, lats, and values
+        p = ax.scatter(lons, lats, values, c=tec_cal, cmap='jet')
+
+        # Add a colorbar to reference the intensity
+        fig.colorbar(p, label='Vamap')
         plt.show()
+
+        # x, y = map(lons, lats)
+
+        # ax.set_xlabel('Latitude')
+        # ax.set_ylabel('Longitude')
+        # ax.set_zlabel('Value')
+
+        # ax.bar3d(x, y, values,
+        #          2, 2, 2, color='r', alpha=0.8)

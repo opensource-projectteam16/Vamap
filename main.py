@@ -3,15 +3,14 @@ import pandas as pd
 import sys
 import os
 import folium
+
 # developed modules
 from choropleth import choropleth
 from main.parser import parser, checkArgument, printparser
 from main.load import Load
-#from main.map3d import Map3d, TileLayer3d
+from main.basemap3D import Map3D
 from main.marker_func import Make_Default_Markers, Make_Value_Markers
 from preprocessing.scoring import Scoring
-
-# Hyunjae Lee is in charge
 
 ''' 
 <How to work>
@@ -27,47 +26,24 @@ from preprocessing.scoring import Scoring
 
 
 def main():
-    # path
+
     path = os.getcwd()
-
-
-    # parsing setup.txt
-    '''
-    Sungjae Min is in charge
-
-    when user hits 'python main.py setup.txt',
-    arg = .... (read the content of setup.txt)
-    coverage , weights = parser(arg, path)
-
-    '''
 
     arg = checkArgument(sys.argv)
     coverage, user_data, roads, others = parser(path)
     printparser(coverage, user_data, roads, others)
-
-
-    # TODO Check error handling is working well.
 
     # Load csv, json files
     load_instance = Load(path)
     csvLists, jsonOutputs = load_instance.loadJson()
     Map_Object = load_instance.map_create_withJsons(jsonOutputs)
 
-    # print(csvLists)
     # Data processing
-
-    #   Sangmin Lee is in charge
     preprocessing = Scoring(coverage, user_data, roads, others)
-
-    # #    [if you need]
-    # #    //return_values  = preprocessing.function_name(...)
-
     scored_user_data, scored_roads, scored_others = preprocessing.valueScore()
 
     # Global tooltip
     tooltip = 'Click For More Info'
-
-    # Load custom marker icon
 
     # Load default markers (roads, buildings, subways)
     Make_Default_Markers(Map_Object, scored_roads, scored_others, path)
@@ -76,13 +52,16 @@ def main():
     # (calculated by 'scoring')
     Make_Value_Markers(Map_Object, scored_user_data, coverage, path)
 
+    # TODO 3D MAP
+    New3dMap = Map3D(scored_user_data)
+    New3dMap.draw3dMap()
+
     # Add choropleth
     choropleth(Map_Object)
 
-
-    #Save as html file
-
-    Map_Object.save('MAP.html')
+    # Save as html file
+    # FIXME MAP.html 파일은 반드시 지우고 커밋할 것.
+    # Map_Object.save('MAP.html')
 
 
 if __name__ == "__main__":
