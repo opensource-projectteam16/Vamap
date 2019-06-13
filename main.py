@@ -2,10 +2,12 @@
 import pandas as pd
 import sys
 import os
+import folium
 # developed modules
+from choropleth import choropleth
 from main.parser import parser, checkArgument, printparser
 from main.load import Load
-from main.map3d import Map3d, TileLayer3d
+#from main.map3d import Map3d, TileLayer3d
 from main.marker_func import Make_Default_Markers, Make_Value_Markers
 from preprocessing.scoring import Scoring
 
@@ -75,9 +77,8 @@ def main():
     Make_Value_Markers(Map_Object, scored_user_data, coverage, path)
 
     # Add choropleth
-    # Map_Object.choropleth(
+    choropleth(Map_Object)
 
-    # )
 
     #Save as html file
 
