@@ -1,10 +1,11 @@
-
 from mpl_toolkits.basemap import Basemap
 from matplotlib.collections import PolyCollection
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d import axes3d
 from matplotlib import style
 
+import matplotlib.colors as colors
+import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
 ''' This class is to draw 3D map using Basemap '''
@@ -33,6 +34,7 @@ class Map3D:
 
         fig = plt.figure()
         # ax = Axes3D(fig)
+        # ax = fig.add_subplot(111, projection='3d')
         ax = fig.gca(projection='3d')
 
         map = Basemap(projection='cyl',  # 'gall',
@@ -76,12 +78,11 @@ class Map3D:
 
         lons = np.array(lons)
         lats = np.array(lats)
-        values = np.array(values)
-
-        print(lons, lats, values)
+        # Normalize
+        maxValue = max(values)
+        values = np.array(values) / maxValue
 
         # axis setup
-
         ax.set_axis_on()
         ax.azim = 270
         ax.dist = 7
@@ -89,30 +90,15 @@ class Map3D:
         ax.add_collection3d(map.drawcoastlines(linewidth=0.25))
         ax.add_collection3d(map.drawcountries(linewidth=0.35))
 
-        ax.view_init(azim=230, elev=50)
+        ax.view_init(azim=285, elev=45)
         ax.set_xlabel('Longitude (°E)', labelpad=20)
         ax.set_ylabel('Latitude (°N)', labelpad=20)
-        ax.set_zlabel('Altitude (km)', labelpad=20)
+        ax.set_zlabel('Values ', labelpad=20)
+        ax.set_zlim(0., 1.)
 
-        ax.set_yticks(parallels)
-        ax.set_yticklabels(parallels)
-        ax.set_xticks(meridians)
-        ax.set_xticklabels(meridians)
-        ax.set_zlim(0., 1000.)
+        # convert to map projection and plot
+        x, y = map(lons, lats)
+        ax.bar3d(y, x,  np.array([0] * len(lats)), 0.1,
+                 0.1, values, color='b', alpha=0.5)
 
-        # TODO NEED TO TEST
-        # scatter map based on lons, lats, and values
-        p = ax.scatter(lons, lats, values, c=tec_cal, cmap='jet')
-
-        # Add a colorbar to reference the intensity
-        fig.colorbar(p, label='Vamap')
         plt.show()
-
-        # x, y = map(lons, lats)
-
-        # ax.set_xlabel('Latitude')
-        # ax.set_ylabel('Longitude')
-        # ax.set_zlabel('Value')
-
-        # ax.bar3d(x, y, values,
-        #          2, 2, 2, color='r', alpha=0.8)
