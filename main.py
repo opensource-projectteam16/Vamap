@@ -12,19 +12,17 @@ from preprocessing.scoring import Scoring
 # Hyunjae Lee is in charge
 
 ''' 
-<How to work>
-
-<Usage> 
- Input example  :
- Output example :
-
+How to work
+Usage 
+ Input example  
+ Output example 
 '''
 
 
 # MAIN
 
 
-def main():
+def main()
     # path
     path = os.getcwd()
 
@@ -32,11 +30,9 @@ def main():
     # parsing setup.txt
     '''
     Sungjae Min is in charge
-
     when user hits 'python main.py setup.txt',
     arg = .... (read the content of setup.txt)
     coverage , weights = parser(arg, path)
-
     '''
 
     arg = checkArgument(sys.argv)
@@ -58,7 +54,7 @@ def main():
     preprocessing = Scoring(coverage, user_data, roads, others)
 
     # #    [if you need]
-    # #    //return_values  = preprocessing.function_name(...)
+    # #    return_values  = preprocessing.function_name(...)
 
     scored_user_data, scored_roads, scored_others = preprocessing.valueScore()
 
@@ -84,5 +80,5 @@ def main():
     Map_Object.save('MAP.html')
 
 
-if __name__ == "__main__":
+if __name__ == __main__
     main()
