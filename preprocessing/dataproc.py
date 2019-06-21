@@ -13,8 +13,11 @@ import platform
 <How to work>
 
 <Usage> 
- Input example  :
- Output example :
+ Input example  : dataproc(Pack, mode)
+
+                Pack : values() of Set
+ Output example : list[numpy,numpy,numpy...]
+                numpy: numpy.array of datasets thar read from excel file
 
 '''
 

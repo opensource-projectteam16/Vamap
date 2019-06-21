@@ -1,4 +1,4 @@
-# Coverage : this is absolute meter-wise distance centered on each user data, which will include all possible value objects. (50 ~ 1000m)
+﻿# Coverage : this is absolute meter-wise distance centered on each user data, which will include all possible value objects. (50 ~ 1000m)
 500
 
 # User data file, sheet name, latitude, longitude, weight(-1.0 ~ 1.0)
@@ -22,3 +22,8 @@ road_test.xlsx, road_3, x, y, start_x, start_y, end_x, end_y, value, 4
 # Other value files, sheet name, latitude, longitude, (value, value-weight( -10 ~ 10 ))
 seoul_building_1_test.xlsx, building_2, x, y, value, 3
 seoul_building_1_test.xlsx, building_3, x, y, value, 4
+
+# additional excutable file
+
+# User select range of latitude, longitude (start , end)
+0,0, 0,0
