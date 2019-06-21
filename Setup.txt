@@ -24,3 +24,6 @@ seoul_building_1_test.xlsx, building_2, x, y, value, 3
 seoul_building_1_test.xlsx, building_3, x, y, value, 4
 
 # additional excutable file
+
+# User select range of latitude, longitude (start , end)
+0,0, 0,0

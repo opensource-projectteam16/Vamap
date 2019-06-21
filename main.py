@@ -28,8 +28,8 @@ def main():
     path = os.getcwd()
 
     arg = checkArgument(sys.argv)
-    coverage, user_data, roads, others = parser(path)
-    printparser(coverage, user_data, roads, others)
+    coverage, user_data, roads, others, executefile , userselect_coor = parser(path)
+    printparser(coverage, user_data, roads, others, executefile , userselect_coor)
 
     # Load csv, json files
     load_instance = Load(path)
@@ -51,16 +51,15 @@ def main():
     Make_Value_Markers(Map_Object, scored_user_data, coverage, path)
 
     # TODO 3D MAP
-    New3dMap = Map3D(scored_user_data)
-    New3dMap.draw3dMap()
+    #New3dMap = Map3D(scored_user_data)
+    #New3dMap.draw3dMap()
 
     # Add choropleth
     choropleth(Map_Object)
 
     # Save as html file
-    # FIXME MAP.html ?åå?ùº??? Î∞òÎìú?ãú Ïß??ö∞Í≥? Ïª§Î∞ã?ï† Í≤?.
-    # Map_Object.save('MAP.html')
+    Map_Object.save('MAP.html')
 
 
-if __name__ == __main__
+if __name__ == "__main__":
     main()
