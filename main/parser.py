@@ -159,7 +159,7 @@ def parser(path):
             else:
                 executefile=""
         if flag:
-            return fined_coverage, userdata_list, roads, others,executefile 
+            return fined_coverage, userdata_list, roads, others, executefile
 
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
@@ -184,10 +184,11 @@ def strToint(str):
     float_str = float(str.split(')')[1].strip())
     return float_str
 
-def printparser(coverage, userdata_list, roads, others):
+def printparser(coverage, userdata_list, roads, others , executefile):
     print("\n===============Read Setup.txt=================================================================================================================================================\n")
     print("[Coverage] : ", coverage)
     print("\n[User data] : ", userdata_list)
     print("\n[Roads files & Weights] : ", roads)
     print("\n[Other files & Weights] : ", others)
+    print("\n[executefile] : ", executefile)
     print("\n===============================================================================================================================================================================\n")
