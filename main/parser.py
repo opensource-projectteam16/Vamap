@@ -28,6 +28,10 @@ def parser(path):
         value_num = int(array[2])
         road_num = int(array[3])
 
+        userselect_coor_list = [0 for x in range(4)]
+        for i in range(4):
+            userselect_coor_list[i] = int(array[9].split(',')[i].strip())
+
         userdata_list = [0 for x in range(5)]
         for i in range(5):
             userdata_list[i] = array[1].split(',')[i].strip()
@@ -36,7 +40,6 @@ def parser(path):
         if not -1 <= userdata_list[4] <= 1:
             flag = False
             print("Userdata's weight must be in -1.0 ~ 1.0")
-
 
 
         # Rule of User data form
@@ -159,7 +162,7 @@ def parser(path):
             else:
                 executefile=""
         if flag:
-            return fined_coverage, userdata_list, roads, others, executefile
+            return fined_coverage, userdata_list, roads, others, executefile , userselect_coor_list
 
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
@@ -184,11 +187,12 @@ def strToint(str):
     float_str = float(str.split(')')[1].strip())
     return float_str
 
-def printparser(coverage, userdata_list, roads, others , executefile):
+def printparser(coverage, userdata_list, roads, others , executefile, userselect_coor_list):
     print("\n===============Read Setup.txt=================================================================================================================================================\n")
     print("[Coverage] : ", coverage)
     print("\n[User data] : ", userdata_list)
     print("\n[Roads files & Weights] : ", roads)
     print("\n[Other files & Weights] : ", others)
     print("\n[executefile] : ", executefile)
+    print("\n[User select coordinate] : ", userselect_coor_list)
     print("\n===============================================================================================================================================================================\n")

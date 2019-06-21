@@ -28,8 +28,8 @@ def main():
     path = os.getcwd()
 
     arg = checkArgument(sys.argv)
-    coverage, user_data, roads, others, executefile = parser(path)
-    printparser(coverage, user_data, roads, others, executefile)
+    coverage, user_data, roads, others, executefile , userselect_coor = parser(path)
+    printparser(coverage, user_data, roads, others, executefile , userselect_coor)
 
     # Load csv, json files
     load_instance = Load(path)
