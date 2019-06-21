@@ -1,3 +1,4 @@
+# coding=utf-8
 # Sangmin Lee is in charge
 
 from preprocessing.dataproc import dataproc
@@ -25,12 +26,14 @@ from math import radians, cos, sin, asin, sqrt
                 Pack : values() of Set
 
 '''
+
 class Scoring:
     def __init__(self, coverage, userSet, roadsSet, othersSet):
         self.coverage = coverage
         self.userSet = userSet
         self.roadsSet = roadsSet
         self.othersSet = othersSet
+        self.inlist = list()
 
     # 2개 들어갈때 Weight 조정하기
     def packingList(self, predata, Weight, mode):
@@ -69,7 +72,7 @@ class Scoring:
             sy = sy[0]
             if mode == 0:
                 for i, j in zip(sx, sy):
-                    result.append([float(i[0][0]), float(j[0][0]), float(self.userSet[4])])
+                    result.append([float(i[0][0]), float(j[0][0]), float(Weight[x])])
             if mode == 2 :
                 va = va[0]
                 for i, j in zip(sx, sy):
@@ -85,22 +88,6 @@ class Scoring:
                     result.append([float(i[0][0]), float(j[0][0]), float(k[0][0]), float(l[0][0]), float(m[0][0]), float(n[0][0]),float(Weight[x])])
 
         return result
-
-    '''
-
-     #coverage 범위
-     #범위에 따른 패킹
-     # 벨류값 연산
-     #리턴
-
-     roadsSet = {0.5 : [csv,sheet1,x,y,start,end,idth,5], 가중치 :  [csv,sheet2,위도,y,st,fn]}
-     dataproc(csv, sheet1, 위도, 경도)
-     =>
-
-     othersSet = { 가중치 : [csv, sheet, x,y]}
-     userSet = [csv, sheet,x, y, value]
-
-     '''
 
     def callObj(self):
         #        Rcount = len(self.roadsSet)
@@ -119,7 +106,7 @@ class Scoring:
         preotherW = list(self.othersSet.keys())
         roadWeight = []
         otherWeight = []
-        uservalue = []
+        uservalue = [self.userSet[4]]
 
         rpack =[]
         opack = []
@@ -215,7 +202,8 @@ class Scoring:
         for i in x:
             incover.remove(i)
 
-        print('217', incover)
+        self.inlist.append(incover)
+
         return incover
 
     #    roadsSet = {0.5 : [x,y,start,end], 가중치 :  [csv,sheet2,x,y,st,fn]}
@@ -240,7 +228,6 @@ class Scoring:
         for i in x:
             incover.remove(i)
 
-        print('240', incover)
         return incover
 
     def convertDis(self, userdata, data):
@@ -270,11 +257,7 @@ class Scoring:
         data = self.inCoverage(user, data)
 
         pre = self.convertDis(user, data)
-        '''
-        print('270', pre)
-        if pre != [] :
-            print('271',data[0][2])
-        '''
+
         for i in range(0, len(pre)):
             x = data[i][2] * (pre[i] / coverage)
             sum += x
@@ -344,9 +327,13 @@ class Scoring:
         print('\n===============Scored UserData=======================================================================================================================================\n')
         print("[Latitude,  Longitude,  Value  ]")
         for i in range(0, len(resultUser)):
-            if (2*(i+1)) > len(resultUser):
+            if (3*i) > len(resultUser):
                 break
-            print(resultUser[int(len(resultUser)/(2*(i+1)))])
+            print(resultUser[(3*i)])
         print("\n================================================================================================================================================================\n")
 
         return resultUser, roads, others_data
+
+
+    def return_incover(self):
+        return self.inlist

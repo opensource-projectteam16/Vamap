@@ -8,16 +8,18 @@ from main.load import Load
 from main.map3d import Map3d, TileLayer3d
 from main.marker_func import Make_Default_Markers, Make_Value_Markers
 from preprocessing.scoring import Scoring
+import numpy as np
+import vincent
+import folium
+import json
 
 # Hyunjae Lee is in charge
 
 ''' 
 <How to work>
-
 <Usage> 
  Input example  :
  Output example :
-
 '''
 
 
@@ -32,11 +34,9 @@ def main():
     # parsing setup.txt
     '''
     Sungjae Min is in charge
-
     when user hits 'python main.py setup.txt',
     arg = .... (read the content of setup.txt)
     coverage , weights = parser(arg, path)
-
     '''
 
     arg = checkArgument(sys.argv)
@@ -83,6 +83,42 @@ def main():
 
     Map_Object.save('MAP.html')
 
+    incover = preprocessing.return_incover()
+
+    k=0;
+    popup = list()
+    x =[]
+    y =[]
+    for data in incover:
+        if data != list() :
+            for i in data:
+                x.append(i[0])
+                y.append(i[1])
+            npx = np.array(x)
+            npy = np.array(y)
+
+            scatter_points = {
+                'x': npx,
+                'y': npy,
+            }
+
+            scatter_chart = vincent.Scatter(scatter_points,
+                                            iter_idx='x',
+                                            width=600,
+                                            height=300)
+
+            scatter_json = scatter_chart.to_json()
+            scatter_dict = json.loads(scatter_json)
+
+
+            popup = folium.Popup(max_width=650)
+            folium.Vega(scatter_dict, height=350, width=650).add_to(popup)
+            folium.Marker([scored_user_data[k][0], scored_user_data[k][1]], popup=popup).add_to(Map_Object)
+            k+=1;
+
+        else :
+            k+=1;
+        Map_Object.save('MAP.html')
 
 if __name__ == "__main__":
     main()
