@@ -12,7 +12,7 @@ def parser(path):
     try:
         flag = True
         # TODO : Test open setup.txt file
-        with open(path + "/Setup.txt", 'r', encoding='utf-8') as ins:
+        with open(path + "/Setup.txt", 'r', encoding='utf-8-sig') as ins:
             array = []
             for line in ins:
                 li = line.strip()
@@ -136,7 +136,7 @@ def parser(path):
 
             # save as dict
             for i in range(value_num - road_num):
-                other_list[i] = array[-(value_num - road_num) + i].split(',')
+                other_list[i] = array[5+road_num + i].split(',')
                 others[weight_list_string[-(value_num - road_num) + i]] = other_list[i]
 
                 for j in range(len(other_list[i])):
@@ -154,8 +154,12 @@ def parser(path):
 
                 returnColumn(path + file_path + other_list[i][0], other_list[i][1].strip(), other_list[i][2].strip())
 
+            if len(array)==5+value_num+1:
+                executefile=array[5+value_num]
+            else:
+                executefile=""
         if flag:
-            return fined_coverage, userdata_list, roads, others
+            return fined_coverage, userdata_list, roads, others,executefile 
 
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
