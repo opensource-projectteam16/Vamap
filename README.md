@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="500" height="300" src="./static/readme_logo.png">
+  <img width="500" height="300" src="./static/readme_logo.jpg">
 </p>
 
 | **`LICENSE`** | **`Watch`** | **`Size`** |**`Download`**|**`Issues`**|**`Pull Request`**|
