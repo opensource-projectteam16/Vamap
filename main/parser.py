@@ -159,7 +159,7 @@ def parser(path):
             else:
                 executefile=""
         if flag:
-            return fined_coverage, userdata_list, roads, others,executefile 
+            return fined_coverage, userdata_list, roads, others,executefile, userselect_coor_list 
 
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
