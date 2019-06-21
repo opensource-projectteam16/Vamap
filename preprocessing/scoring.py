@@ -2,7 +2,7 @@
 
 from preprocessing.dataproc import dataproc
 from math import radians, cos, sin, asin, sqrt
-
+from preprocessing.location_filter import location_filter
 ''' 
 <How to work>
 <Usage>
@@ -215,7 +215,6 @@ class Scoring:
         for i in x:
             incover.remove(i)
 
-        print('217', incover)
         return incover
 
     #    roadsSet = {0.5 : [x,y,start,end], 가중치 :  [csv,sheet2,x,y,st,fn]}
@@ -240,7 +239,6 @@ class Scoring:
         for i in x:
             incover.remove(i)
 
-        print('240', incover)
         return incover
 
     def convertDis(self, userdata, data):
@@ -270,11 +268,7 @@ class Scoring:
         data = self.inCoverage(user, data)
 
         pre = self.convertDis(user, data)
-        '''
-        print('270', pre)
-        if pre != [] :
-            print('271',data[0][2])
-        '''
+
         for i in range(0, len(pre)):
             x = data[i][2] * (pre[i] / coverage)
             sum += x
@@ -321,6 +315,7 @@ class Scoring:
         roads_data = roads_data[0]
         others_data = others_data[0]
 
+        userdata = location_filter(user_data,0,0)
         resultUser = user_data
         count = 0
 
