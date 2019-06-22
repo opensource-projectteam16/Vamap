@@ -1,4 +1,5 @@
 import folium
+from folium import FeatureGroup, LayerControl, Map, Marker
 import os
 # import base64
 # from io import BytesIO
@@ -77,3 +78,35 @@ def Make_Value_Markers(MapObject, user_data, coverage, path):
             fill=False,
             fill_color=color
         ).add_to(MapObject)
+
+def Make_Value_Markers_clustering(Map_Object, path,dat1="",dat2="",dat3=""):
+
+    feature_group_roads = FeatureGroup(name='scored_roads')
+    print('clustering')
+    
+    # Mark others marker ::
+    # eachObject[0] = coorx,
+    # eachObject[1] = coory,
+    scored_dat1 = FeatureGroup(name='scored_dat1')
+    scored_dat2 = FeatureGroup(name='scored_dat2')
+    scored_dat3 = FeatureGroup(name='scored_dat3')
+
+    if dat1!="":
+        for eachObject in dat1:
+            Marker(location=eachObject).add_to(scored_dat1)
+        scored_dat1.add_to(Map_Object)
+
+    if dat2!="":
+        for eachObject in dat2:
+            Marker(location=eachObject).add_to(scored_dat2)
+        scored_dat2.add_to(Map_Object)
+            
+    if dat3!="":
+        for eachObject in dat3:
+            Marker(location=eachObject).add_to(scored_dat3)
+            
+        scored_dat3.add_to(Map_Object)
+
+    LayerControl().add_to(Map_Object)
+    Map_Object.save('thing.html')
+

@@ -12,7 +12,7 @@ def parser(path):
     try:
         flag = True
         # TODO : Test open setup.txt file
-        with open(path + "/Setup.txt", 'r', encoding='utf-8') as ins:
+        with open(path + "/Setup.txt", 'r', encoding='utf-8-sig') as ins:
             array = []
             for line in ins:
                 li = line.strip()
@@ -28,6 +28,10 @@ def parser(path):
         value_num = int(array[2])
         road_num = int(array[3])
 
+        userselect_coor_list = [0 for x in range(4)]
+        for i in range(4):
+            userselect_coor_list[i] = int(array[9].split(',')[i].strip())
+
         userdata_list = [0 for x in range(5)]
         for i in range(5):
             userdata_list[i] = array[1].split(',')[i].strip()
@@ -36,7 +40,6 @@ def parser(path):
         if not -1 <= userdata_list[4] <= 1:
             flag = False
             print("Userdata's weight must be in -1.0 ~ 1.0")
-
 
 
         # Rule of User data form
@@ -136,7 +139,7 @@ def parser(path):
 
             # save as dict
             for i in range(value_num - road_num):
-                other_list[i] = array[-(value_num - road_num) + i].split(',')
+                other_list[i] = array[5+road_num + i].split(',')
                 others[weight_list_string[-(value_num - road_num) + i]] = other_list[i]
 
                 for j in range(len(other_list[i])):
@@ -154,8 +157,12 @@ def parser(path):
 
                 returnColumn(path + file_path + other_list[i][0], other_list[i][1].strip(), other_list[i][2].strip())
 
+            if len(array)==5+value_num+1:
+                executefile=array[5+value_num]
+            else:
+                executefile=""
         if flag:
-            return fined_coverage, userdata_list, roads, others
+            return fined_coverage, userdata_list, roads, others, executefile , userselect_coor_list
 
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
@@ -180,10 +187,12 @@ def strToint(str):
     float_str = float(str.split(')')[1].strip())
     return float_str
 
-def printparser(coverage, userdata_list, roads, others):
+def printparser(coverage, userdata_list, roads, others , executefile, userselect_coor_list):
     print("\n===============Read Setup.txt=================================================================================================================================================\n")
     print("[Coverage] : ", coverage)
     print("\n[User data] : ", userdata_list)
     print("\n[Roads files & Weights] : ", roads)
     print("\n[Other files & Weights] : ", others)
+    print("\n[executefile] : ", executefile)
+    print("\n[User select coordinate] : ", userselect_coor_list)
     print("\n===============================================================================================================================================================================\n")

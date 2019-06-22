@@ -3,7 +3,7 @@
 
 from preprocessing.dataproc import dataproc
 from math import radians, cos, sin, asin, sqrt
-
+from preprocessing.location_filter import location_filter
 ''' 
 <How to work>
 <Usage>
@@ -203,7 +203,6 @@ class Scoring:
             incover.remove(i)
 
         self.inlist.append(incover)
-
         return incover
 
     #    roadsSet = {0.5 : [x,y,start,end], 가중치 :  [csv,sheet2,x,y,st,fn]}
@@ -217,7 +216,7 @@ class Scoring:
                     or (data[i][2] > upPoint[0] and data[i][2] < downPoint[0]) \
                     or (data[i][4] > upPoint[0] and data[i][4] < downPoint[0]):
                 incover.append(data[i])
-            else : pass;
+            else : pass
 
         x = []
         for i in range(0, len(incover)):
@@ -304,6 +303,7 @@ class Scoring:
         roads_data = roads_data[0]
         others_data = others_data[0]
 
+        userdata = location_filter(user_data,0,0)
         resultUser = user_data
         count = 0
 
