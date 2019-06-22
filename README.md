@@ -52,8 +52,7 @@ $ python main.py setup.txt
 
 ## Deployment
 
-[GIF 파일 반드시 준비하자]
-Add additional notes about how to deploy this on a live system
+[![Demo video](http://img.youtube.com/vi/cWCxjerOPwY/0.jpg)](https://youtu.be/cWCxjerOPwY)
 
 ## Contributing
 
