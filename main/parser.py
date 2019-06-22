@@ -162,7 +162,9 @@ def parser(path):
             else:
                 executefile=""
         if flag:
-            return fined_coverage, userdata_list, roads, others, executefile , userselect_coor_list
+
+            return fined_coverage, userdata_list, roads, others, executefile , userselect_coor_list, userselect_coor_list 
+
 
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
@@ -193,6 +195,8 @@ def printparser(coverage, userdata_list, roads, others , executefile, userselect
     print("\n[User data] : ", userdata_list)
     print("\n[Roads files & Weights] : ", roads)
     print("\n[Other files & Weights] : ", others)
+
     print("\n[executefile] : ", executefile)
     print("\n[User select coordinate] : ", userselect_coor_list)
     print("\n===============================================================================================================================================================================\n")
+
