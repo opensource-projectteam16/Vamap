@@ -27,14 +27,19 @@ $ pip install folium
 $ git clone https://github.com/opensource-projectteam16/Team16_Development.git
 ```
 
-2. Change addresses written in your excel file to location values through commands below
+2. Installing modules
+```
+$ pip install -r requirements.txt
+```
+
+3. Change addresses written in your excel file to location values through commands below
 this will return a pair of new columns that are ***<column_name>_x***  and ***<column_name>_y*** which refer latitude, longitude.
 
 ```
 $ python roadmanager.py <your_roadfile.xlsx> <sheet_name> <column_name> 
 ```
 
-3. Set up your input variables and Run main
+4. Set up your input variables and Run main
 
 Write setup.txt according to setup rules (you can check them in the file)
 then execute command line below
@@ -43,7 +48,7 @@ then execute command line below
 $ python main.py setup.txt
 ```
 
-4. Then you will get ***MAP.html*** which shows you **2 different markers**, which are **roads and others**, and **one marker evaluated by surrounded objects that are in the given coverage** 
+5. Then you will get ***MAP.html*** which shows you **2 different markers**, which are **roads and others**, and **one marker evaluated by surrounded objects that are in the given coverage** 
 
 ## Deployment
 
