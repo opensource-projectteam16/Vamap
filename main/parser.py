@@ -41,7 +41,6 @@ def parser(path):
             flag = False
             print("Userdata's weight must be in -1.0 ~ 1.0")
 
-
         # Rule of User data form
         if not len(userdata_list[2:]) == 3:
             flag = False
@@ -96,7 +95,8 @@ def parser(path):
 
         weight_list_string = [0 for x in range(value_num)]
         for i in range(value_num):
-            weight_list_string[i] = str(i+1) + ") " + str(array[4].split(',')[i])
+            weight_list_string[i] = str(
+                i+1) + ") " + str(array[4].split(',')[i])
 
         # User inputs number of roads file '0'
         if road_num == 0:
@@ -123,7 +123,6 @@ def parser(path):
                 for j in range(len(road_list[i])):
                     road_list[i][j] = road_list[i][j].strip()
 
-
                 if not (len(road_list[i]) == 8 or len(road_list[i]) == 10):
                     flag = False
                     print("Please check roadfile form.")
@@ -135,12 +134,14 @@ def parser(path):
                         flag = False
                         print("value-weight must be in -10 ~ 10")
 
-                returnColumn(path + file_path + road_list[i][0], road_list[i][1].strip(), road_list[i][2].strip())
+                returnColumn(
+                    path + file_path + road_list[i][0], road_list[i][1].strip(), road_list[i][2].strip())
 
             # save as dict
             for i in range(value_num - road_num):
                 other_list[i] = array[5+road_num + i].split(',')
-                others[weight_list_string[-(value_num - road_num) + i]] = other_list[i]
+                others[weight_list_string[-(value_num -
+                                            road_num) + i]] = other_list[i]
 
                 for j in range(len(other_list[i])):
                     other_list[i][j] = other_list[i][j].strip()
@@ -155,16 +156,16 @@ def parser(path):
                         flag = False
                         print("value-weight must be in -10 ~ 10")
 
-                returnColumn(path + file_path + other_list[i][0], other_list[i][1].strip(), other_list[i][2].strip())
+                returnColumn(
+                    path + file_path + other_list[i][0], other_list[i][1].strip(), other_list[i][2].strip())
 
-            if len(array)==5+value_num+1:
-                executefile=array[5+value_num]
+            if len(array) == 5+value_num+1:
+                executefile = array[5+value_num]
             else:
-                executefile=""
+                executefile = ""
         if flag:
 
-            return fined_coverage, userdata_list, roads, others, executefile , userselect_coor_list, userselect_coor_list 
-
+            return fined_coverage, userdata_list, roads, others, executefile, userselect_coor_list
 
     except FileNotFoundError:
         print("No such file or directory. Please check file or directory and retry 'python main.py'")
@@ -189,7 +190,8 @@ def strToint(str):
     float_str = float(str.split(')')[1].strip())
     return float_str
 
-def printparser(coverage, userdata_list, roads, others , executefile, userselect_coor_list):
+
+def printparser(coverage, userdata_list, roads, others, executefile, userselect_coor_list):
     print("\n===============Read Setup.txt=================================================================================================================================================\n")
     print("[Coverage] : ", coverage)
     print("\n[User data] : ", userdata_list)
@@ -199,4 +201,3 @@ def printparser(coverage, userdata_list, roads, others , executefile, userselect
     print("\n[executefile] : ", executefile)
     print("\n[User select coordinate] : ", userselect_coor_list)
     print("\n===============================================================================================================================================================================\n")
-

@@ -26,6 +26,8 @@ import json
 
 def main():
 
+    path = os.getcwd()
+
     arg = checkArgument(sys.argv)
     coverage, user_data, roads, others, executefile, userselect_coor = parser(
         path)
@@ -52,8 +54,8 @@ def main():
     Make_Value_Markers(Map_Object, scored_user_data, coverage, path)
 
     # TODO 3D MAP
-    #New3dMap = Map3D(scored_user_data)
-    # New3dMap.draw3dMap()
+    New3dMap = Map3D(scored_user_data)
+    New3dMap.draw3dMap()
 
     # Add choropleth
     choropleth(Map_Object)
@@ -61,42 +63,42 @@ def main():
     # Save as html file
     Map_Object.save('MAP.html')
 
-    incover = preprocessing.return_incover()
+    # incover = preprocessing.return_incover()
 
-    k = 0
-    popup = list()
-    x = []
-    y = []
-    for data in incover:
-        if data != list():
-            for i in data:
-                x.append(i[0])
-                y.append(i[1])
-            npx = np.array(x)
-            npy = np.array(y)
+    # k = 0
+    # popup = list()
+    # x = []
+    # y = []
+    # for data in incover:
+    #     if data != list():
+    #         for i in data:
+    #             x.append(i[0])
+    #             y.append(i[1])
+    #         npx = np.array(x)
+    #         npy = np.array(y)
 
-            scatter_points = {
-                'x': npx,
-                'y': npy,
-            }
+    #         scatter_points = {
+    #             'x': npx,
+    #             'y': npy,
+    #         }
 
-            scatter_chart = vincent.Scatter(scatter_points,
-                                            iter_idx='x',
-                                            width=600,
-                                            height=300)
+    #         scatter_chart = vincent.Scatter(scatter_points,
+    #                                         iter_idx='x',
+    #                                         width=600,
+    #                                         height=300)
 
-            scatter_json = scatter_chart.to_json()
-            scatter_dict = json.loads(scatter_json)
+    #         scatter_json = scatter_chart.to_json()
+    #         scatter_dict = json.loads(scatter_json)
 
-            popup = folium.Popup(max_width=650)
-            folium.Vega(scatter_dict, height=350, width=650).add_to(popup)
-            folium.Marker([scored_user_data[k][0], scored_user_data[k]
-                           [1]], popup=popup).add_to(Map_Object)
-            k += 1
+    #         popup = folium.Popup(max_width=650)
+    #         folium.Vega(scatter_dict, height=350, width=650).add_to(popup)
+    #         folium.Marker([scored_user_data[k][0], scored_user_data[k]
+    #                        [1]], popup=popup).add_to(Map_Object)
+    #         k += 1
 
-        else:
-            k += 1
-        Map_Object.save('MAP.html')
+    #     else:
+    #         k += 1
+    #     Map_Object.save('MAP.html')
 
 
 if __name__ == "__main__":
